@@ -20,7 +20,6 @@ const appPaths = [
   "/dashboard",
   "/course",
   "/bookmarks",
-  "/search",
   "/settings",
 ];
 

@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { SearchModal } from "@/components/ui/search-modal";
 import { signOut } from "@/lib/actions/auth";
 
 interface User {
@@ -19,20 +18,7 @@ interface NavbarProps {
 }
 
 export function Navbar({ variant = "marketing", user }: NavbarProps) {
-  const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  // Global Ctrl+K shortcut
-  useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-        e.preventDefault();
-        setSearchOpen(true);
-      }
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
 
   return (
     <>
@@ -99,26 +85,6 @@ export function Navbar({ variant = "marketing", user }: NavbarProps) {
               </>
             ) : (
               <>
-                <button
-                  onClick={() => setSearchOpen(true)}
-                  className="flex items-center gap-2 font-mono text-xs text-muteddark hover:text-parchment transition-colors"
-                >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="m21 21-4.35-4.35" />
-                  </svg>
-                  Search
-                  <kbd className="font-mono text-[10px] text-muteddark bg-panel border border-panelborder px-1.5 py-0.5 rounded">
-                    Ctrl+K
-                  </kbd>
-                </button>
                 <Link
                   href="/bookmarks"
                   className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
@@ -196,7 +162,6 @@ export function Navbar({ variant = "marketing", user }: NavbarProps) {
                 <MobileLink href="/dashboard" label="Dashboard" />
                 <MobileLink href="/course" label="Course" />
                 <MobileLink href="/bookmarks" label="Bookmarks" />
-                <MobileLink href="/search" label="Search" />
                 <MobileLink href="/settings" label="Settings" />
                 {user && (
                   <div className="pt-2 border-t border-panelborder">
@@ -215,8 +180,6 @@ export function Navbar({ variant = "marketing", user }: NavbarProps) {
           </div>
         )}
       </header>
-
-      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }
