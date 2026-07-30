@@ -17,9 +17,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
   }
 
   const hasCourseAccess = await hasAccess();
-  // In development without DB seeded, allow access
-  // TODO: Remove the !hasCourseAccess check once seed is run
-  // if (!hasCourseAccess) redirect("/pricing");
+  if (!hasCourseAccess) redirect("/pricing");
 
   const lesson = await getLessonWithProgress(lessonId);
 

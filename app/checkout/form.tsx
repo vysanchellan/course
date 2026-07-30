@@ -54,72 +54,6 @@ export function CheckoutForm({ tier }: CheckoutFormProps) {
     }
   }
 
-  if (!clientId) {
-    return (
-      <div className="space-y-4">
-        <form onSubmit={handleEmailSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block font-mono text-xs text-muteddark uppercase tracking-wider mb-1.5">
-              Email address
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full px-3.5 py-2.5 bg-white/[0.05] border border-white/10 rounded-sm font-mono text-sm text-parchment placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
-              placeholder="you@example.com"
-            />
-          </div>
-          {!showPayPal ? (
-            <Button variant="gold" size="lg" className="w-full" type="submit">
-              Continue to payment
-            </Button>
-          ) : (
-            <Button
-              variant="gold"
-              size="lg"
-              className="w-full"
-              onClick={async () => {
-                setLoading(true);
-                try {
-                  const res = await fetch("/api/payments/capture", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ orderId: "mock", tier, email }),
-                  });
-                  const data = await res.json();
-                  if (data.success) {
-                    if (data.recoveryLink) {
-                      window.location.href = data.recoveryLink;
-                    } else {
-                      router.push("/login?access=granted");
-                    }
-                  } else {
-                    setError(data.error || "Payment failed");
-                  }
-                } catch {
-                  setError("Payment failed");
-                } finally {
-                  setLoading(false);
-                }
-              }}
-              disabled={loading}
-            >
-              {loading ? "Processing..." : `Complete purchase (dev mode) — $${tier === "premium" ? "13" : "10"}`}
-            </Button>
-          )}
-        </form>
-        {error && (
-          <div className="font-mono text-xs text-[#b3503a] bg-[#b3503a]/10 border border-[#b3503a]/20 rounded-sm px-3 py-2">
-            {error}
-          </div>
-        )}
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
       {!showPayPal ? (
@@ -162,31 +96,66 @@ export function CheckoutForm({ tier }: CheckoutFormProps) {
               Change
             </button>
           </div>
-          <PayPalScriptProvider
-            options={{
-              clientId,
-              currency: "USD",
-              intent: "capture",
-            }}
-          >
-            <PayPalButtons
-              style={{ layout: "vertical", shape: "rect", color: "gold" }}
-              createOrder={async () => {
-                const res = await fetch("/api/payments/create-order", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ tier }),
-                });
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.error || "Failed to create order");
-                return data.id;
+          {clientId ? (
+            <PayPalScriptProvider
+              options={{
+                clientId,
+                currency: "USD",
+                intent: "capture",
               }}
-              onApprove={onPayPalApprove}
-              onError={() => {
-                setError("PayPal error occurred");
+            >
+              <PayPalButtons
+                style={{ layout: "vertical", shape: "rect", color: "gold" }}
+                createOrder={async () => {
+                  const res = await fetch("/api/payments/create-order", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ tier }),
+                  });
+                  const data = await res.json();
+                  if (!res.ok) throw new Error(data.error || "Failed to create order");
+                  return data.id;
+                }}
+                onApprove={onPayPalApprove}
+                onError={() => {
+                  setError("PayPal error occurred");
+                }}
+              />
+            </PayPalScriptProvider>
+          ) : (
+            <Button
+              variant="gold"
+              size="lg"
+              className="w-full"
+              onClick={async () => {
+                setLoading(true);
+                try {
+                  const res = await fetch("/api/payments/capture", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ orderId: "dev-simulated", tier, email }),
+                  });
+                  const data = await res.json();
+                  if (data.success) {
+                    if (data.recoveryLink) {
+                      window.location.href = data.recoveryLink;
+                    } else {
+                      router.push("/login?access=granted");
+                    }
+                  } else {
+                    setError(data.error || "Payment failed");
+                  }
+                } catch {
+                  setError("Payment failed");
+                } finally {
+                  setLoading(false);
+                }
               }}
-            />
-          </PayPalScriptProvider>
+              disabled={loading}
+            >
+              {loading ? "Processing..." : `Complete purchase (dev mode) — $${tier === "premium" ? "13" : "10"}`}
+            </Button>
+          )}
           {loading && (
             <div className="font-mono text-xs text-muteddark text-center">
               Processing your payment...

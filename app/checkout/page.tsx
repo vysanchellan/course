@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CheckoutForm } from "./form";
 
 interface CheckoutPageProps {
@@ -11,6 +12,12 @@ export default async function CheckoutPage({ searchParams }: CheckoutPageProps) 
 
   return (
     <div className="min-h-screen bg-dusk flex items-center justify-center px-6">
+      <div className="fixed top-6 left-6 z-10">
+        <Link href="/" className="font-mono text-sm">
+          <span className="text-gold">~</span>
+          <span className="text-parchment">/course</span>
+        </Link>
+      </div>
       <div className="w-full max-w-md">
         <div className="relative">
           <div className="absolute -inset-4 bg-gradient-to-r from-gold/10 to-goldsoft/10 blur-2xl rounded-3xl pointer-events-none" />
