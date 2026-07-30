@@ -28,7 +28,7 @@ export function RecentLessons({
 }) {
   if (activities.length === 0) {
     return (
-      <div className="bg-panel border border-panelborder rounded-md p-6">
+      <div className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-xl p-6">
         <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-3">
           Recent Activity
         </div>
@@ -40,7 +40,7 @@ export function RecentLessons({
   }
 
   return (
-    <div className="bg-panel border border-panelborder rounded-md p-6">
+    <div className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-xl p-6 hover:-translate-y-0.5 hover:shadow-lg transition-all">
       <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-4">
         Recent Activity
       </div>
@@ -49,7 +49,7 @@ export function RecentLessons({
           <Link
             key={`${activity.lessonId}-${i}`}
             href={`/course/${activity.lessonId}`}
-            className="flex items-center gap-3 py-3 border-b border-panelborder last:border-0 hover:bg-panelborder/20 -mx-6 px-6 transition-colors"
+            className="flex items-center gap-3 py-3 border-b border-white/10 last:border-0 hover:bg-white/[0.03] -mx-6 px-6 transition-colors"
           >
             <span
               className={cn(

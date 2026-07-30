@@ -22,7 +22,7 @@ export default async function DashboardPage() {
       <div className="px-6 md:px-12 py-10 max-w-3xl mx-auto">
         <div className="text-center py-20">
           <div className="font-mono text-xs text-muteddark mb-2">No course data found</div>
-          <p className="font-serif text-lg text-ink/60">
+          <p className="font-serif text-lg text-[#c9c6bd]/60">
             Run the seed endpoint to populate the database.
           </p>
         </div>
@@ -48,7 +48,7 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
+      <div className="grid md:grid-cols-3 gap-6 mb-6">
         <div className="md:col-span-2">
           <ContinueReadingCard
             slug={dashboard.currentLessonSlug}
@@ -66,7 +66,7 @@ export default async function DashboardPage() {
         />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
+      <div className="grid md:grid-cols-2 gap-6 mb-6">
         <RecentLessons activities={dashboard.recentActivity} />
         <BookmarksWidget bookmarks={bookmarks} />
       </div>

@@ -31,7 +31,7 @@ export function CourseProgressList({
   }
 
   return (
-    <div className="bg-panel border border-panelborder rounded-md p-6">
+    <div className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-xl p-6">
       <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-4">
         All Lessons
       </div>
@@ -42,14 +42,14 @@ export function CourseProgressList({
             <Link
               key={lesson.id}
               href={`/course/${lesson.slug}`}
-              className="flex items-center gap-3 py-3 px-3 -mx-3 rounded-sm hover:bg-panelborder/20 transition-colors"
+              className="flex items-center gap-3 py-3 px-3 -mx-3 rounded-sm hover:bg-white/[0.03] transition-colors"
             >
               <span
                 className={cn(
                   "flex items-center justify-center w-7 h-7 rounded-full border text-[11px] font-mono shrink-0",
                   prog?.completed
                     ? "bg-diffadd/10 border-diffadd/30 text-diffadd"
-                    : "border-panelborder text-muteddark"
+                    : "border-white/10 text-muteddark"
                 )}
               >
                 {prog?.completed ? (

@@ -17,7 +17,7 @@ export function BookmarksWidget({
 }) {
   if (bookmarks.length === 0) {
     return (
-      <div className="bg-panel border border-panelborder rounded-md p-6">
+      <div className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-xl p-6">
         <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-3">
           Bookmarks
         </div>
@@ -30,7 +30,7 @@ export function BookmarksWidget({
   }
 
   return (
-    <div className="bg-panel border border-panelborder rounded-md p-6">
+    <div className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-xl p-6 hover:-translate-y-0.5 hover:shadow-lg transition-all">
       <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-4">
         Bookmarks
       </div>
@@ -39,7 +39,7 @@ export function BookmarksWidget({
           <Link
             key={bm.id}
             href={`/course/${bm.lessonSlug}`}
-            className="block py-3 border-b border-panelborder last:border-0 hover:bg-panelborder/20 -mx-6 px-6 transition-colors"
+            className="block py-3 border-b border-white/10 last:border-0 hover:bg-white/[0.03] -mx-6 px-6 transition-colors"
           >
             <div className="flex items-center gap-2 mb-1">
               <svg

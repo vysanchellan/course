@@ -43,7 +43,7 @@ export default function PricingPage() {
               ))}
             </ul>
             <Link
-              href="/register?tier=standard"
+              href="/checkout?tier=standard"
               className="block w-full bg-gold text-ink font-mono font-bold text-sm py-3.5 rounded-sm hover:bg-goldsoft transition-colors text-center"
             >
               Get access
@@ -78,7 +78,7 @@ export default function PricingPage() {
               ))}
             </ul>
             <Link
-              href="/register?tier=premium"
+              href="/checkout?tier=premium"
               className="block w-full bg-gold text-ink font-mono font-bold text-sm py-3.5 rounded-sm hover:bg-goldsoft transition-colors text-center"
             >
               Get access

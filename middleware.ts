@@ -14,6 +14,7 @@ const publicPaths = [
   "/auth/callback",
   "/auth/forgot-password",
   "/auth/reset-password",
+  "/auth/set-password",
   "/api/seed",
   "/api/payments",
 ];
