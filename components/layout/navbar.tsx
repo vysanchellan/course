@@ -59,7 +59,7 @@ export function Navbar({ variant = "marketing", user }: NavbarProps) {
                   FAQ
                 </Link>
                 <Link
-                  href="/pricing"
+                  href="/#buy"
                   className="font-mono text-xs text-ink/60 hover:text-ink transition-colors"
                 >
                   Pricing
@@ -167,7 +167,7 @@ export function Navbar({ variant = "marketing", user }: NavbarProps) {
               <>
                 <MobileLink href="/about" label="About" />
                 <MobileLink href="/faq" label="FAQ" />
-                <MobileLink href="/pricing" label="Pricing" />
+                <MobileLink href="/#buy" label="Pricing" />
                 {user ? (
                   <MobileLink href="/dashboard" label="Dashboard" />
                 ) : (

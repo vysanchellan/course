@@ -21,7 +21,7 @@ export function Footer() {
             <div className="space-y-2">
               <FooterLink href="/about">About</FooterLink>
               <FooterLink href="/faq">FAQ</FooterLink>
-              <FooterLink href="/pricing">Pricing</FooterLink>
+              <FooterLink href="/#buy">Pricing</FooterLink>
             </div>
           </div>
           <div>

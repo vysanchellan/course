@@ -19,10 +19,10 @@ export function Hero() {
             teaches.
           </p>
           <Link
-            href="/pricing"
+            href="/#buy"
             className="inline-flex items-center gap-2 bg-ink text-parchment font-mono text-sm font-medium px-6 py-3.5 rounded-sm hover:bg-ink/85 transition-colors"
           >
-            Get the guide — $10
+            Get the guide — $10+
             <span aria-hidden="true">→</span>
           </Link>
         </div>
