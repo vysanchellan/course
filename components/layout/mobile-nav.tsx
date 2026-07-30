@@ -79,6 +79,11 @@ const items = [
 export function MobileNav() {
   const pathname = usePathname();
 
+  // Hide on lesson reader pages
+  if (pathname.startsWith("/course/") && pathname !== "/course") {
+    return null;
+  }
+
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-dusk border-t border-panelborder">
       <div className="flex items-center justify-around px-2 py-2">

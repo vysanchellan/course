@@ -146,7 +146,7 @@ export function ReaderPageClient({
           </div>
 
           <div
-            className="prose-course"
+            className="prose-course-dark"
             dangerouslySetInnerHTML={{ __html: lesson.content }}
           />
 

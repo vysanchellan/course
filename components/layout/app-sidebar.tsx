@@ -8,6 +8,11 @@ import { lessons, defaultProgress, courseState } from "@/lib/data";
 export function AppSidebar() {
   const pathname = usePathname();
 
+  // Hide sidebar on lesson reader pages (they have their own SideToc)
+  if (pathname.startsWith("/course/") && pathname !== "/course") {
+    return null;
+  }
+
   return (
     <aside className="hidden lg:flex flex-col w-64 border-r border-panelborder bg-panel overflow-y-auto">
       <div className="p-4 border-b border-panelborder">
