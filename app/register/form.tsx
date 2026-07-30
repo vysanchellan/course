@@ -27,7 +27,7 @@ export function RegisterForm({ tier }: RegisterFormProps) {
       )}
       <input type="hidden" name="tier" value={tier} />
       <div>
-        <label htmlFor="name" className="block font-mono text-xs font-medium text-ink/70 uppercase tracking-wider mb-1.5">
+        <label htmlFor="name" className="block font-mono text-xs font-medium text-[#c9c6bd]/70 uppercase tracking-wider mb-1.5">
           Name
         </label>
         <input
@@ -35,12 +35,12 @@ export function RegisterForm({ tier }: RegisterFormProps) {
           name="name"
           type="text"
           required
-          className="w-full px-3.5 py-2.5 bg-transparent border border-ink/20 rounded-sm font-mono text-sm text-ink placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+          className="w-full px-3.5 py-2.5 bg-transparent border border-white/10 rounded-sm font-mono text-sm text-parchment placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
           placeholder="Your name"
         />
       </div>
       <div>
-        <label htmlFor="email" className="block font-mono text-xs font-medium text-ink/70 uppercase tracking-wider mb-1.5">
+        <label htmlFor="email" className="block font-mono text-xs font-medium text-[#c9c6bd]/70 uppercase tracking-wider mb-1.5">
           Email
         </label>
         <input
@@ -48,12 +48,12 @@ export function RegisterForm({ tier }: RegisterFormProps) {
           name="email"
           type="email"
           required
-          className="w-full px-3.5 py-2.5 bg-transparent border border-ink/20 rounded-sm font-mono text-sm text-ink placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+          className="w-full px-3.5 py-2.5 bg-transparent border border-white/10 rounded-sm font-mono text-sm text-parchment placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
           placeholder="you@example.com"
         />
       </div>
       <div>
-        <label htmlFor="password" className="block font-mono text-xs font-medium text-ink/70 uppercase tracking-wider mb-1.5">
+        <label htmlFor="password" className="block font-mono text-xs font-medium text-[#c9c6bd]/70 uppercase tracking-wider mb-1.5">
           Password
         </label>
         <input
@@ -62,7 +62,7 @@ export function RegisterForm({ tier }: RegisterFormProps) {
           type="password"
           required
           minLength={6}
-          className="w-full px-3.5 py-2.5 bg-transparent border border-ink/20 rounded-sm font-mono text-sm text-ink placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+          className="w-full px-3.5 py-2.5 bg-transparent border border-white/10 rounded-sm font-mono text-sm text-parchment placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
           placeholder="At least 6 characters"
         />
       </div>

@@ -3,7 +3,7 @@ import { Reveal } from "./reveal";
 
 export function BuySection() {
   return (
-    <section id="buy" className="relative py-28 px-6 md:px-16 overflow-hidden">
+    <section id="buy" className="relative py-28 px-6 md:px-16 overflow-hidden bg-dusk">
       <div className="absolute inset-0 bg-gradient-to-b from-dusk via-[#121110] to-dusk" />
       <div className="absolute inset-0 opacity-[0.06]"
         style={{

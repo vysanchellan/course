@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Hero() {
   return (
-    <header className="relative px-6 md:px-12 py-16 md:py-20 overflow-hidden"
+    <header className="relative px-6 md:px-12 py-16 md:py-20 overflow-hidden bg-dusk"
       style={{background: "radial-gradient(ellipse 900px 500px at 10% -20%, rgba(201,162,75,0.12), transparent 60%), #0B0B0D"}}
     >
       <div className="absolute rounded-full pointer-events-none"

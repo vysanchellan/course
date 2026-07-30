@@ -14,7 +14,7 @@ export function Stack() {
   ];
 
   return (
-    <section className="relative py-28 px-6 md:px-16 overflow-hidden">
+    <section className="relative py-28 px-6 md:px-16 overflow-hidden bg-dusk">
       <Reveal>
       <div className="absolute inset-0 bg-gradient-to-b from-dusk via-[#121110] to-dusk" />
       <div className="absolute inset-0 opacity-[0.03]"

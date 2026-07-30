@@ -35,7 +35,7 @@ export function ForgotPasswordForm() {
       <div>
         <label
           htmlFor="email"
-          className="block font-mono text-xs font-medium text-ink/70 uppercase tracking-wider mb-1.5"
+          className="block font-mono text-xs font-medium text-[#c9c6bd]/70 uppercase tracking-wider mb-1.5"
         >
           Email
         </label>
@@ -44,7 +44,7 @@ export function ForgotPasswordForm() {
           name="email"
           type="email"
           required
-          className="w-full px-3.5 py-2.5 bg-transparent border border-ink/20 rounded-sm font-mono text-sm text-ink placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+          className="w-full px-3.5 py-2.5 bg-transparent border border-white/10 rounded-sm font-mono text-sm text-parchment placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
           placeholder="you@example.com"
         />
       </div>

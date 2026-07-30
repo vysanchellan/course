@@ -17,7 +17,7 @@ const faqs = [
 
 export function FAQSection() {
   return (
-    <section className="relative py-24 px-6 md:px-12 overflow-hidden">
+    <section className="relative py-24 px-6 md:px-12 overflow-hidden bg-dusk">
       <div className="absolute inset-0 bg-gradient-to-b from-dusk via-[#0f0e10] to-dusk" />
       <div className="absolute inset-0 opacity-[0.04]"
         style={{
