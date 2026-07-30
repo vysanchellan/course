@@ -2,96 +2,66 @@ import Link from "next/link";
 
 export function Hero() {
   return (
-    <header className="relative min-h-screen overflow-hidden">
-      {/* Gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-dusk via-dusk to-[#1a1510]" />
-      <div className="absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 25% 50%, #C9A24B 0%, transparent 50%), radial-gradient(circle at 75% 50%, #C9A24B 0%, transparent 50%)",
-        }}
-      />
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage:
-            "linear-gradient(#C9A24B 1px, transparent 1px), linear-gradient(90deg, #C9A24B 1px, transparent 1px)",
-          backgroundSize: "42px 42px",
-        }}
+    <header className="relative px-6 md:px-12 py-16 md:py-20 overflow-hidden"
+      style={{background: "radial-gradient(ellipse 900px 500px at 10% -20%, rgba(201,162,75,0.12), transparent 60%), #0B0B0D"}}
+    >
+      <div className="absolute rounded-full pointer-events-none"
+        style={{width:600,height:600,top:-250,left:"20%",background:"radial-gradient(circle, rgba(201,162,75,0.30), transparent 70%)",filter:"blur(70px)"}}
       />
 
-      <div className="relative grid md:grid-cols-2 min-h-screen">
-        {/* Left: content */}
-        <div className="flex flex-col justify-center px-8 md:px-16 py-20 order-2 md:order-1">
-          <div className="max-w-md">
-            <div className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.25em] text-gold uppercase mb-8 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-4 py-1.5">
-              A Practical Guide &middot; 2026
-            </div>
-
-            {/* Question reveal sequence */}
-            <div className="hero-sequence mb-8">
-              <p className="hero-question-1 font-serif text-xl md:text-2xl leading-snug text-[#c9c6bd]">
-                You can build a website with AI in an afternoon.
-              </p>
-              <p className="hero-question-2 font-serif text-xl md:text-2xl leading-snug text-[#c9c6bd]">
-                So why can&rsquo;t you get paid for one?
-              </p>
-            </div>
-
-            {/* Headline and CTA (appears after reveal) */}
-            <div className="hero-main">
-              <h1 className="font-serif text-[2.75rem] md:text-6xl leading-[1.05] font-medium mb-8 text-parchment">
-                From Zero
-                <br />
-                <span className="bg-gradient-to-r from-gold to-goldsoft bg-clip-text text-transparent">
-                  to&nbsp;Deployed
-                </span>
-              </h1>
-              <p className="font-serif italic text-lg md:text-xl text-[#c9c6bd]/80 leading-relaxed mb-10">
-                Anyone can vibe-code a homepage. Almost nobody knows how to ship it,
-                sell it, and actually get paid.
-              </p>
-              <Link
-                href="/#buy"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-gold to-goldsoft text-ink font-mono text-sm font-bold px-6 py-3.5 rounded-sm hover:shadow-lg hover:shadow-gold/20 transition-all"
-              >
-                Get the guide — $10+
-                <span aria-hidden="true">→</span>
-              </Link>
-            </div>
-          </div>
+      <div className="max-w-[640px] mx-auto mb-10 rounded-xl overflow-hidden bg-white/[0.04] backdrop-blur-xl border border-white/10">
+        <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/10">
+          <span className="w-2.5 h-2.5 rounded-full" style={{background:"#e05555"}} />
+          <span className="w-2.5 h-2.5 rounded-full" style={{background:"#e0b955"}} />
+          <span className="w-2.5 h-2.5 rounded-full" style={{background:"#59c46b"}} />
+          <span className="font-mono text-[11px] text-muteddark ml-2">reality_check.log</span>
         </div>
-
-        {/* Right: glass terminal card */}
-        <div className="flex flex-col justify-center px-6 md:px-14 py-20 order-1 md:order-2 relative">
-          <div className="relative max-w-md w-full mx-auto">
-            {/* Glow behind card */}
-            <div className="absolute -inset-4 bg-gradient-to-r from-gold/10 to-goldsoft/10 blur-2xl rounded-3xl" />
-            {/* Glass card */}
-            <div className="relative bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl overflow-hidden">
-              <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#e05555]" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[#e0b955]" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[#59c46b]" />
-                <span className="font-mono text-[11px] text-muteddark ml-3">
-                  deploy.log
-                </span>
-              </div>
-              <div className="p-5 font-mono text-[13px] leading-[1.85] text-[#c9c6bd]">
-                <div>
-                  <span className="text-gold">$</span>{" "}
-                  <span className="type-line inline-block">git push origin main</span>
-                </div>
-                <div className="mt-2 text-muteddark">Deploying to Vercel…</div>
-                <div className="text-diffadd">+ build succeeded in 24s</div>
-                <div className="text-diffadd">+ environment variables verified</div>
-                <div className="text-diffadd">+ database connection: ok</div>
-                <div className="mt-2 text-muteddark">Assigning domain…</div>
-                <div className="text-goldsoft">✓ live at yourclient.com</div>
-              </div>
-            </div>
-          </div>
+        <div className="p-5 font-mono text-[12.5px] leading-[1.9] text-[#c9c6bd]">
+          <div><span className="text-gold">$</span> ./ai_website_builder --prompt &ldquo;landing page&rdquo;</div>
+          <div className="text-diffadd">✓ done in 40 seconds. looks incredible.</div>
+          <div className="mt-2"><span className="text-gold">$</span> ./get_paid_for_it</div>
+          <div className="text-[#c9564f]">✗ command not found</div>
+          <div className="text-[#c9c6bd]">✗ no domain, no database, no deploy, no client, no invoice</div>
         </div>
+      </div>
+
+      <div className="max-w-[760px] mx-auto text-center">
+        <div className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] text-gold uppercase mb-5 border border-gold/30 px-3.5 py-1.5 rounded-sm">
+          // a practical guide &middot; 2026
+        </div>
+        <h1 className="font-serif font-semibold text-[2.75rem] md:text-[3.2rem] leading-[1.08] mb-5 text-parchment">
+          You can{" "}
+          <span className="text-[#7d7b74] line-through decoration-[#c9564f] decoration-[3px]">vibe-code</span>{" "}
+          a homepage.<br />
+          Can you <span className="text-gold">ship</span> one?
+        </h1>
+        <p className="font-mono text-[15px] text-[#c9c6bd] leading-[1.8] max-w-[34rem] mx-auto mb-9">
+          The build is the easy 20%. This is the other 80% &mdash;{" "}
+          <b className="text-parchment">deploy it, connect a real database, buy the domain, price the work, and don&rsquo;t fold the first time something breaks in front of a paying client.</b>
+        </p>
+        <div className="flex items-center justify-center gap-4 flex-wrap">
+          <Link
+            href="/checkout?tier=standard"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-gold to-goldsoft text-[#171310] font-mono font-bold text-[14px] px-7 py-3.5 rounded-sm no-underline shadow-[0_10px_30px_-10px_rgba(201,162,75,0.5)] hover:shadow-[0_10px_30px_-5px_rgba(201,162,75,0.6)] transition-shadow"
+          >
+            GET THE GUIDE &mdash; $10 &rarr;
+          </Link>
+          <span className="font-mono text-[12px] text-muteddark">one-time &middot; no subscription &middot; lifetime access</span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-4 gap-px max-w-[820px] mx-auto mt-16 rounded-xl overflow-hidden bg-white/10">
+        {[
+          { num: "14", lbl: "chapters" },
+          { num: "$0", lbl: "tool cost (bar one)" },
+          { num: "1", lbl: "stack, no fluff" },
+          { num: "0", lbl: "\u201Ctrust me bro\u201D moments" },
+        ].map((s) => (
+          <div key={s.lbl} className="bg-panel text-center py-6 px-4">
+            <div className="font-serif text-[2rem] text-gold font-semibold">{s.num}</div>
+            <div className="font-mono text-[10.5px] text-muteddark uppercase tracking-[0.1em] mt-1.5">{s.lbl}</div>
+          </div>
+        ))}
       </div>
     </header>
   );

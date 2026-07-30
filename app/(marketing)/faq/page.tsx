@@ -5,7 +5,7 @@ const faqs = [
   },
   {
     q: "What tools do I need?",
-    a: "A computer, an internet connection, and Claude Pro ($20/month). Every other tool in the stack is free — Next.js, TypeScript, Tailwind CSS, GitHub, Vercel, and Supabase.",
+    a: "A computer, an internet connection, and Claude Pro ($20/month). Every other tool in the stack is free &mdash; Next.js, TypeScript, Tailwind CSS, GitHub, Vercel, and Supabase.",
   },
   {
     q: "Is this a video course or a PDF?",
@@ -23,24 +23,24 @@ const faqs = [
 
 export default function FAQPage() {
   return (
-    <div className="bg-parchment">
+    <div className="bg-dusk min-h-screen">
       <div className="max-w-2xl mx-auto px-6 md:px-16 py-24">
         <div className="font-mono text-[11px] tracking-[0.25em] text-gold uppercase mb-6">
           FAQ
         </div>
-        <h1 className="font-serif text-3xl md:text-4xl font-medium mb-10 leading-tight">
+        <h1 className="font-serif text-3xl md:text-4xl font-medium mb-10 leading-tight text-parchment">
           Frequently asked questions.
         </h1>
-        <div className="space-y-6">
+        <div className="space-y-4">
           {faqs.map((faq, i) => (
             <div
               key={i}
-              className="border border-ink/10 rounded-md bg-parchment p-6"
+              className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-xl p-6"
             >
-              <h3 className="font-mono text-sm font-medium text-ink mb-3">
+              <h3 className="font-mono text-sm font-medium text-gold mb-3">
                 {faq.q}
               </h3>
-              <p className="font-serif text-base leading-relaxed text-ink/70">
+              <p className="font-sans text-base leading-relaxed text-[#c9c6bd]/80">
                 {faq.a}
               </p>
             </div>

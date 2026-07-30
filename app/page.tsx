@@ -4,7 +4,7 @@ import { Hero } from "@/components/landing/hero";
 import { Problem } from "@/components/landing/problem";
 import { Contents } from "@/components/landing/contents";
 import { Stack } from "@/components/landing/stack";
-import { WhoFor } from "@/components/landing/who-for";
+import { FAQSection } from "@/components/landing/faq-section";
 import { BuySection } from "@/components/landing/buy-section";
 
 export default function HomePage() {
@@ -15,7 +15,7 @@ export default function HomePage() {
       <Problem />
       <Contents />
       <Stack />
-      <WhoFor />
+      <FAQSection />
       <BuySection />
       <Footer />
     </>

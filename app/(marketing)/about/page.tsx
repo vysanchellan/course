@@ -1,17 +1,17 @@
 export default function AboutPage() {
   return (
-    <div className="bg-parchment">
+    <div className="bg-dusk min-h-screen">
       <div className="max-w-2xl mx-auto px-6 md:px-16 py-24">
         <div className="font-mono text-[11px] tracking-[0.25em] text-gold uppercase mb-6">
           About
         </div>
-        <h1 className="font-serif text-3xl md:text-4xl font-medium mb-8 leading-tight">
+        <h1 className="font-serif text-3xl md:text-4xl font-medium mb-8 leading-tight text-parchment">
           Why this guide exists.
         </h1>
-        <div className="font-serif text-lg leading-relaxed text-ink/80 space-y-5">
+        <div className="font-serif text-lg leading-relaxed text-[#c9c6bd]/80 space-y-5">
           <p>
             I&rsquo;ve spent the last two years building websites with AI. Not
-            as a novelty, not as a trick — as a real, repeatable process for
+            as a novelty, not as a trick &mdash; as a real, repeatable process for
             delivering client work.
           </p>
           <p>

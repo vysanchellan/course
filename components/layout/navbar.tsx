@@ -44,47 +44,48 @@ export function Navbar({ variant = "marketing", user, accessLevel }: NavbarProps
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-7">
             {variant === "marketing" ? (
               <>
                 <Link
                   href="/about"
-                  className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
+                  className="font-mono text-[13px] text-[#7d7b74] hover:text-parchment transition-colors"
                 >
-                  About
+                  ABOUT
                 </Link>
                 <Link
                   href="/faq"
-                  className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
+                  className="font-mono text-[13px] text-[#7d7b74] hover:text-parchment transition-colors"
                 >
                   FAQ
                 </Link>
                 <Link
-                  href="/#buy"
-                  className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
+                  href="/pricing"
+                  className="font-mono text-[13px] text-[#7d7b74] hover:text-parchment transition-colors"
                 >
-                  Pricing
+                  PRICING
                 </Link>
                 {user ? (
                   <Link
                     href="/dashboard"
-                    className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
+                    className="font-mono text-[13px] text-[#7d7b74] hover:text-parchment transition-colors"
                   >
-                    Dashboard
+                    DASHBOARD
                   </Link>
                 ) : (
-                  <>
-                    <Link
-                      href="/login"
-                      className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
-                    >
-                      Login
-                    </Link>
-                    <Button variant="primary" size="sm" asChild>
-                      <Link href="/register">Get Started</Link>
-                    </Button>
-                  </>
+                  <Link
+                    href="/login"
+                    className="font-mono text-[13px] text-[#7d7b74] hover:text-parchment transition-colors"
+                  >
+                    LOGIN
+                  </Link>
                 )}
+                <Link
+                  href="/checkout?tier=standard"
+                  className="bg-gold text-[#171310] font-mono font-bold text-[12px] px-4 py-2 rounded-sm"
+                >
+                  GET_ACCESS
+                </Link>
               </>
             ) : (
               <>
@@ -154,19 +155,20 @@ export function Navbar({ variant = "marketing", user, accessLevel }: NavbarProps
           <div className="md:hidden border-t border-panelborder bg-panel px-6 py-4 space-y-3">
             {variant === "marketing" ? (
               <>
-                <MobileLink href="/about" label="About" />
+                <MobileLink href="/about" label="ABOUT" />
                 <MobileLink href="/faq" label="FAQ" />
-                <MobileLink href="/#buy" label="Pricing" />
+                <MobileLink href="/pricing" label="PRICING" />
                 {user ? (
-                  <MobileLink href="/dashboard" label="Dashboard" />
+                  <MobileLink href="/dashboard" label="DASHBOARD" />
                 ) : (
-                  <>
-                    <MobileLink href="/login" label="Login" />
-                    <Button variant="primary" size="md" className="w-full mt-2" asChild>
-                      <Link href="/register">Get Started</Link>
-                    </Button>
-                  </>
+                  <MobileLink href="/login" label="LOGIN" />
                 )}
+                <Link
+                  href="/checkout?tier=standard"
+                  className="block w-full bg-gold text-[#171310] font-mono font-bold text-sm py-3 rounded-sm text-center mt-2"
+                >
+                  GET_ACCESS
+                </Link>
               </>
             ) : (
               <>
