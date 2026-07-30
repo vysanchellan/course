@@ -68,6 +68,24 @@ export function MobileNav({ accessLevel }: MobileNavProps) {
     },
   ];
 
+  // Add final project — always visible
+  items.push({
+    href: "/course/final-project",
+    label: "Capstone",
+    icon: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+      </svg>
+    ),
+  });
+
   // Add troubleshooting — always available
   items.push({
     href: "/troubleshooting",

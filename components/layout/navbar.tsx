@@ -90,6 +90,12 @@ export function Navbar({ variant = "marketing", user, accessLevel }: NavbarProps
             ) : (
               <>
                 <Link
+                  href="/course/final-project"
+                  className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
+                >
+                  Final Project
+                </Link>
+                <Link
                   href="/troubleshooting"
                   className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
                 >
@@ -180,6 +186,7 @@ export function Navbar({ variant = "marketing", user, accessLevel }: NavbarProps
               <>
                 <MobileLink href="/dashboard" label="Dashboard" />
                 <MobileLink href="/course" label="Course" />
+                <MobileLink href="/course/final-project" label="Final Project" />
                 <MobileLink href="/bookmarks" label="Bookmarks" />
                 <MobileLink href="/troubleshooting" label="Troubleshooting" />
                 {showSupport && (
