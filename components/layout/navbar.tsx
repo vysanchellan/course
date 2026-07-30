@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,18 @@ export function Navbar({ variant = "marketing", user }: NavbarProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Global Ctrl+K shortcut
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
   return (
     <>
       <header
@@ -29,7 +41,7 @@ export function Navbar({ variant = "marketing", user }: NavbarProps) {
           "sticky top-0 z-40 w-full",
           variant === "app"
             ? "bg-dusk border-b border-panelborder"
-            : "bg-parchment/95 backdrop-blur-sm border-b border-ink/5"
+            : "bg-dusk/80 backdrop-blur-lg border-b border-white/5"
         )}
       >
         <nav className="flex items-center justify-between px-6 md:px-10 h-14">
@@ -38,7 +50,7 @@ export function Navbar({ variant = "marketing", user }: NavbarProps) {
             className="font-mono text-sm font-medium tracking-tight"
           >
             <span className="text-gold">~</span>
-            <span className={variant === "app" ? "text-parchment" : "text-ink"}>
+            <span className="text-parchment">
               /course
             </span>
           </Link>
@@ -48,26 +60,26 @@ export function Navbar({ variant = "marketing", user }: NavbarProps) {
               <>
                 <Link
                   href="/about"
-                  className="font-mono text-xs text-ink/60 hover:text-ink transition-colors"
+                  className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
                 >
                   About
                 </Link>
                 <Link
                   href="/faq"
-                  className="font-mono text-xs text-ink/60 hover:text-ink transition-colors"
+                  className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
                 >
                   FAQ
                 </Link>
                 <Link
                   href="/#buy"
-                  className="font-mono text-xs text-ink/60 hover:text-ink transition-colors"
+                  className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
                 >
                   Pricing
                 </Link>
                 {user ? (
                   <Link
                     href="/dashboard"
-                    className="font-mono text-xs text-ink/60 hover:text-ink transition-colors"
+                    className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
                   >
                     Dashboard
                   </Link>
@@ -75,7 +87,7 @@ export function Navbar({ variant = "marketing", user }: NavbarProps) {
                   <>
                     <Link
                       href="/login"
-                      className="font-mono text-xs text-ink/60 hover:text-ink transition-colors"
+                      className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
                     >
                       Login
                     </Link>
@@ -150,7 +162,7 @@ export function Navbar({ variant = "marketing", user }: NavbarProps) {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              className={variant === "app" ? "text-parchment" : "text-ink"}
+              className="text-parchment"
             >
               {mobileOpen ? (
                 <path d="M18 6 6 18M6 6l12 12" />

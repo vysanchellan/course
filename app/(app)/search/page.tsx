@@ -3,15 +3,25 @@
 import { useState } from "react";
 import Link from "next/link";
 import { lessons } from "@/lib/data";
+import { getLessonContent } from "@/lib/content";
+
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+}
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
 
-  const results = lessons.filter(
-    (l) =>
-      l.title.toLowerCase().includes(query.toLowerCase()) ||
-      l.description.toLowerCase().includes(query.toLowerCase())
-  );
+  const results = query
+    ? lessons.filter((l) => {
+        const q = query.toLowerCase();
+        if (l.title.toLowerCase().includes(q)) return true;
+        if (l.description.toLowerCase().includes(q)) return true;
+        const content = stripHtml(getLessonContent(l.id));
+        if (content.toLowerCase().includes(q)) return true;
+        return false;
+      })
+    : [];
 
   return (
     <div className="px-6 md:px-12 py-10 max-w-3xl mx-auto">
@@ -38,14 +48,14 @@ export default function SearchPage() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search lessons by title or description..."
-          className="w-full pl-11 pr-4 py-3 bg-panel border border-panelborder rounded-md font-mono text-sm text-parchment placeholder:text-muteddark/50 focus:outline-none focus:border-gold transition-colors"
+          placeholder="Search lessons by title, description, or content..."
+          className="w-full pl-11 pr-4 py-3 bg-panel/80 backdrop-blur-sm border border-panelborder rounded-md font-mono text-sm text-parchment placeholder:text-muteddark/50 focus:outline-none focus:border-gold transition-colors"
           autoFocus
         />
       </div>
 
       {query && results.length === 0 && (
-        <div className="bg-panel border border-panelborder rounded-md p-10 text-center">
+        <div className="bg-panel/80 backdrop-blur-sm border border-panelborder rounded-md p-10 text-center">
           <p className="font-mono text-sm text-muteddark">
             No lessons match &ldquo;{query}&rdquo;
           </p>
@@ -58,7 +68,7 @@ export default function SearchPage() {
             <Link
               key={lesson.id}
               href={`/course/${lesson.id}`}
-              className="block bg-panel border border-panelborder rounded-md p-4 hover:border-gold/40 transition-colors"
+              className="block bg-panel/80 backdrop-blur-sm border border-panelborder rounded-md p-4 hover:border-gold/40 transition-colors"
             >
               <div className="flex items-center gap-3">
                 <span className="font-mono text-[11px] text-gold shrink-0">
@@ -79,7 +89,7 @@ export default function SearchPage() {
       )}
 
       {!query && (
-        <div className="bg-panel border border-panelborder rounded-md p-10 text-center">
+        <div className="bg-panel/80 backdrop-blur-sm border border-panelborder rounded-md p-10 text-center">
           <p className="font-mono text-sm text-muteddark">
             Type above to search through all {lessons.length} lessons.
           </p>

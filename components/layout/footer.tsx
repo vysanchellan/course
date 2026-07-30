@@ -2,8 +2,9 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="bg-dusk border-t border-panelborder py-12 px-6">
-      <div className="max-w-5xl mx-auto">
+    <footer className="relative border-t border-white/5 py-12 px-6 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-dusk to-[#0a0a0c]" />
+      <div className="relative max-w-5xl mx-auto">
         <div className="grid md:grid-cols-3 gap-8 mb-10">
           <div>
             <div className="font-mono text-sm text-parchment mb-3">
@@ -35,7 +36,7 @@ export function Footer() {
             </div>
           </div>
         </div>
-        <div className="border-t border-panelborder pt-8 text-center">
+        <div className="border-t border-white/5 pt-8 text-center">
           <p className="font-mono text-[11px] text-muteddark tracking-wide">
             FROM ZERO TO DEPLOYED — NO HYPE, JUST THE PROCESS.
           </p>

@@ -21,15 +21,22 @@ export function Contents() {
   ];
 
   return (
-    <section className="bg-dusk py-24 px-6 md:px-16">
-      <div className="max-w-2xl mx-auto">
+    <section className="relative py-28 px-6 md:px-16 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-dusk via-[#0f0e10] to-dusk" />
+      <div className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 75% 50%, #C9A24B 0%, transparent 50%)",
+        }}
+      />
+      <div className="relative max-w-2xl mx-auto">
         <div className="font-mono text-[11px] tracking-[0.25em] text-gold uppercase mb-6">
           What&rsquo;s Inside
         </div>
         <h2 className="font-serif text-3xl md:text-4xl font-medium text-parchment mb-10">
           Fourteen sections. Plus glossary, cheat sheet, and closing.
         </h2>
-        <div className="bg-panel border border-panelborder rounded-md p-6 md:p-8 font-mono text-[13px] leading-[2.1] text-[#c9c6bd] overflow-x-auto">
+        <div className="bg-white/[0.03] backdrop-blur-sm border border-white/5 rounded-xl p-6 md:p-8 font-mono text-[13px] leading-[2.1] text-[#c9c6bd] overflow-x-auto">
           <div className="text-muteddark mb-1">$ ls ./course</div>
           {files.map((file) => (
             <div key={file.name}>
