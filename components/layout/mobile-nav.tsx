@@ -68,6 +68,25 @@ export function MobileNav({ accessLevel }: MobileNavProps) {
     },
   ];
 
+  // Add troubleshooting — always available
+  items.push({
+    href: "/troubleshooting",
+    label: "Troubleshooting",
+    icon: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 8v4M12 16h.01" />
+      </svg>
+    ),
+  });
+
   // Add support if the user has access
   if (showSupport) {
     items.push({

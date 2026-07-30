@@ -196,90 +196,23 @@ export const lessons: Lesson[] = [
   },
 ];
 
-export const defaultProgress: Record<string, LessonProgress> = {
-  "my-first-website": { lessonId: "my-first-website", completed: false, bookmarked: false, progress: 0, lastReadAt: null },
-  introduction: { lessonId: "introduction", completed: true, bookmarked: false, progress: 100, lastReadAt: "2026-07-28T14:30:00Z" },
-  "toolkit-and-workflow": { lessonId: "toolkit-and-workflow", completed: true, bookmarked: false, progress: 100, lastReadAt: "2026-07-28T15:00:00Z" },
-  "claude-code-vs-free-path": { lessonId: "claude-code-vs-free-path", completed: true, bookmarked: true, progress: 100, lastReadAt: "2026-07-28T16:00:00Z" },
-  "why-this-stack": { lessonId: "why-this-stack", completed: false, bookmarked: false, progress: 100, lastReadAt: "2026-07-29T09:00:00Z" },
-  "prompting-vs-prompt-engineering": { lessonId: "prompting-vs-prompt-engineering", completed: false, bookmarked: false, progress: 100, lastReadAt: "2026-07-29T10:00:00Z" },
-  "the-initial-build": { lessonId: "the-initial-build", completed: false, bookmarked: false, progress: 65, lastReadAt: "2026-07-29T11:00:00Z" },
-  "version-control": { lessonId: "version-control", completed: false, bookmarked: true, progress: 30, lastReadAt: "2026-07-29T14:00:00Z" },
-  deployment: { lessonId: "deployment", completed: false, bookmarked: false, progress: 0, lastReadAt: null },
-  "domain-and-dns": { lessonId: "domain-and-dns", completed: false, bookmarked: false, progress: 0, lastReadAt: null },
-  "environment-variables": { lessonId: "environment-variables", completed: false, bookmarked: false, progress: 0, lastReadAt: null },
-  "connecting-a-database": { lessonId: "connecting-a-database", completed: false, bookmarked: false, progress: 0, lastReadAt: null },
-  "things-that-break": { lessonId: "things-that-break", completed: false, bookmarked: false, progress: 0, lastReadAt: null },
-  "production-management": { lessonId: "production-management", completed: false, bookmarked: false, progress: 0, lastReadAt: null },
-  pricing: { lessonId: "pricing", completed: false, bookmarked: false, progress: 0, lastReadAt: null },
-  "getting-paid": { lessonId: "getting-paid", completed: false, bookmarked: false, progress: 0, lastReadAt: null },
-  glossary: { lessonId: "glossary", completed: false, bookmarked: false, progress: 0, lastReadAt: null },
-  "cheat-sheet": { lessonId: "cheat-sheet", completed: false, bookmarked: false, progress: 0, lastReadAt: null },
-  closing: { lessonId: "closing", completed: false, bookmarked: false, progress: 0, lastReadAt: null },
-};
+function zeroProgress(id: string): LessonProgress {
+  return { lessonId: id, completed: false, bookmarked: false, progress: 0, lastReadAt: null };
+}
+
+export const defaultProgress: Record<string, LessonProgress> = Object.fromEntries(
+  lessons.map((l) => [l.id, zeroProgress(l.id)])
+);
 
 export const courseState: CourseState = {
-  totalLessons: 19,
-  completedLessons: 3,
-  currentLessonId: "the-initial-build",
-  totalReadingTime: "2h 10min",
-  lastSessionDate: "2026-07-29T14:00:00Z",
-  streak: 5,
+  totalLessons: lessons.length,
+  completedLessons: 0,
+  currentLessonId: lessons[0].id,
+  totalReadingTime: "0min",
+  lastSessionDate: "",
+  streak: 0,
 };
 
-export const bookmarks: Bookmark[] = [
-  {
-    id: "bm-1",
-    lessonId: "claude-code-vs-free-path",
-    lessonTitle: "Claude Code vs. the Free Path",
-    chapter: 2,
-    excerpt: "If you're taking this seriously as a way to make money, budget for Claude Code from day one — it pays for itself on your first small client project.",
-    timestamp: "2026-07-28T16:05:00Z",
-  },
-  {
-    id: "bm-2",
-    lessonId: "version-control",
-    lessonTitle: "Version Control: Why GitHub Isn't Optional",
-    chapter: 6,
-    excerpt: "An agent can make several changes across multiple files in a single instruction. Without commits along the way, if one of those changes is wrong, you may have no clean way to isolate and undo just that piece.",
-    timestamp: "2026-07-29T14:15:00Z",
-  },
-];
+export const bookmarks: Bookmark[] = [];
 
-export const recentActivity: RecentActivity[] = [
-  {
-    lessonId: "version-control",
-    lessonTitle: "Version Control: Why GitHub Isn't Optional",
-    chapter: 6,
-    action: "continued",
-    timestamp: "2026-07-29T14:00:00Z",
-  },
-  {
-    lessonId: "the-initial-build",
-    lessonTitle: "The Initial Build",
-    chapter: 5,
-    action: "continued",
-    timestamp: "2026-07-29T11:00:00Z",
-  },
-  {
-    lessonId: "prompting-vs-prompt-engineering",
-    lessonTitle: "The Mindset Shift: Prompting vs. Prompt Engineering",
-    chapter: 4,
-    action: "completed",
-    timestamp: "2026-07-29T10:00:00Z",
-  },
-  {
-    lessonId: "why-this-stack",
-    lessonTitle: "Why This Stack, and Why Almost All of It Is Free",
-    chapter: 3,
-    action: "completed",
-    timestamp: "2026-07-29T09:00:00Z",
-  },
-  {
-    lessonId: "claude-code-vs-free-path",
-    lessonTitle: "Claude Code vs. the Free Path",
-    chapter: 2,
-    action: "completed",
-    timestamp: "2026-07-28T16:00:00Z",
-  },
-];
+export const recentActivity: RecentActivity[] = [];

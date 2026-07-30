@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SimulateProgressButtons } from "./simulate-buttons";
 
 export default function AdminPage() {
   return (
@@ -10,7 +11,7 @@ export default function AdminPage() {
         Course administration.
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
         <Link
           href="/admin/lessons"
           className="bg-panel border border-panelborder rounded-md p-6 hover:border-gold/40 transition-colors"
@@ -38,6 +39,17 @@ export default function AdminPage() {
             View all purchase records.
           </p>
         </Link>
+      </div>
+
+      <div className="bg-panel border border-panelborder rounded-md p-6">
+        <h2 className="font-mono text-sm text-parchment mb-2">
+          Progress Simulator
+        </h2>
+        <p className="font-mono text-xs text-muteddark mb-4">
+          DEV TOOL: Set your own reading_progress to test gated states.
+          This only affects your account.
+        </p>
+        <SimulateProgressButtons />
       </div>
     </div>
   );

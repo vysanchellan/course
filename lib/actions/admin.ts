@@ -139,3 +139,55 @@ export async function grantAccess(formData: FormData) {
   revalidatePath("/admin/purchases");
   return { success: true };
 }
+
+export async function setAdminProgress(state: "none" | "partial" | "complete") {
+  await requireAdmin();
+  const supabase = await createServerSupabaseClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "No user" };
+
+  const { data: allLessons } = await supabase
+    .from("lessons")
+    .select("id")
+    .order("chapter", { ascending: true });
+
+  const lessonIds = allLessons?.map((l) => l.id) || [];
+  if (lessonIds.length === 0) return { error: "No lessons in DB" };
+
+  if (state === "none") {
+    await supabase.from("reading_progress").delete().eq("user_id", user.id);
+  } else if (state === "complete") {
+    const rows = lessonIds.map((id) => ({
+      user_id: user.id,
+      lesson_id: id,
+      progress: 100,
+      completed: true,
+      last_read_at: new Date().toISOString(),
+    }));
+    await supabase.from("reading_progress").upsert(rows, {
+      onConflict: "user_id, lesson_id",
+      ignoreDuplicates: false,
+    });
+  } else {
+    // partial: complete first half
+    const mid = Math.floor(lessonIds.length / 2);
+    const rows = lessonIds.map((id, i) => ({
+      user_id: user.id,
+      lesson_id: id,
+      progress: i < mid ? 100 : i === mid ? 45 : 0,
+      completed: i < mid,
+      last_read_at: new Date().toISOString(),
+    }));
+    await supabase.from("reading_progress").upsert(rows, {
+      onConflict: "user_id, lesson_id",
+      ignoreDuplicates: false,
+    });
+  }
+
+  revalidatePath("/dashboard");
+  revalidatePath("/course");
+  revalidatePath("/admin");
+  return { success: true };
+}

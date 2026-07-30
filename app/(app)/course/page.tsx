@@ -1,11 +1,14 @@
 import Link from "next/link";
-import { lessons, defaultProgress, courseState } from "@/lib/data";
+import { getLessonsWithProgress } from "@/lib/actions/lessons";
 import { Badge } from "@/components/ui/badge";
 
-export default function CourseOverviewPage() {
-  const percentage = Math.round(
-    (courseState.completedLessons / courseState.totalLessons) * 100
-  );
+export default async function CourseOverviewPage() {
+  const lessons = await getLessonsWithProgress();
+
+  const total = lessons.length;
+  const completed = lessons.filter((l: any) => l.progress?.completed).length;
+  const current = lessons.find((l: any) => !l.progress?.completed);
+  const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
 
   return (
     <div className="px-6 md:px-12 py-10 max-w-4xl mx-auto">
@@ -36,31 +39,30 @@ export default function CourseOverviewPage() {
             fill="none"
             stroke="#C9A24B"
             strokeWidth="3"
-            strokeDasharray={`${percentage * 0.942} 94.2`}
+            strokeDasharray={`${pct * 0.942} 94.2`}
             strokeLinecap="round"
             transform="rotate(-90 18 18)"
           />
         </svg>
         <div>
           <div className="font-mono text-sm text-parchment">
-            {courseState.completedLessons} of {courseState.totalLessons} lessons
-            complete
+            {completed} of {total} lessons complete
           </div>
           <div className="font-mono text-xs text-muteddark mt-0.5">
-            {courseState.totalReadingTime} total reading time
+            {total} total lessons
           </div>
         </div>
       </div>
 
       <div className="space-y-4">
-        {lessons.map((lesson) => {
-          const prog = defaultProgress[lesson.id];
-          const isCurrent = lesson.id === courseState.currentLessonId;
+        {lessons.map((lesson: any) => {
+          const prog = lesson.progress;
+          const isCurrent = !prog?.completed && lesson.id === current?.id;
 
           return (
             <Link
               key={lesson.id}
-              href={`/course/${lesson.id}`}
+              href={`/course/${lesson.slug}`}
               className={`block p-5 rounded-md border transition-colors ${
                 prog?.completed
                   ? "bg-panel/50 border-panelborder hover:border-gold/40"
@@ -104,7 +106,7 @@ export default function CourseOverviewPage() {
                     {prog?.completed && (
                       <Badge variant="success">Completed</Badge>
                     )}
-                    {isCurrent && !prog?.completed && (
+                    {isCurrent && (
                       <Badge variant="gold">In Progress</Badge>
                     )}
                   </div>
@@ -113,7 +115,7 @@ export default function CourseOverviewPage() {
                   </p>
                   <div className="flex items-center gap-3 mt-3">
                     <span className="font-mono text-[11px] text-muteddark">
-                      {lesson.readingTime}
+                      {lesson.reading_time || `${lesson.estimated_minutes} min read`}
                     </span>
                     {prog && !prog.completed && prog.progress > 0 && (
                       <>

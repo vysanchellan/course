@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { lessons as staticLessons } from "@/lib/data";
 
 export async function saveProgress(data: {
   lessonId: string;
@@ -22,7 +23,7 @@ export async function saveProgress(data: {
       lesson_id: data.lessonId,
       progress: Math.min(100, Math.max(0, data.progress)),
       scroll_position: data.scrollPosition ?? 0,
-      completed: data.completed ?? data.progress >= 100,
+      completed: data.completed === true,
       last_read_at: new Date().toISOString(),
     },
     { onConflict: "user_id, lesson_id" }
@@ -32,6 +33,7 @@ export async function saveProgress(data: {
 
   revalidatePath("/course/[slug]");
   revalidatePath("/dashboard");
+  revalidatePath("/course");
   return { success: true };
 }
 
@@ -50,70 +52,99 @@ export async function getDashboardProgress() {
     .limit(1);
 
   const course = courses?.[0];
-  if (!course) return null;
 
-  const { data: allLessons } = await supabase
-    .from("lessons")
-    .select("id, chapter, slug, title, reading_time, estimated_minutes")
-    .eq("course_id", course.id)
-    .order("chapter", { ascending: true });
+  // Try DB first, fall back to static data
+  if (course) {
+    const { data: allLessons } = await supabase
+      .from("lessons")
+      .select("id, chapter, slug, title, reading_time, estimated_minutes")
+      .eq("course_id", course.id)
+      .order("chapter", { ascending: true });
 
-  const { data: progressData } = await supabase
-    .from("reading_progress")
-    .select("*")
-    .eq("user_id", user.id);
+    if (allLessons && allLessons.length > 0) {
+      const { data: progressData } = await supabase
+        .from("reading_progress")
+        .select("*")
+        .eq("user_id", user.id);
 
-  const totalLessons = allLessons?.length || 0;
-  const completedLessons =
-    progressData?.filter((p) => p.completed).length || 0;
-  const progressMap = new Map(
-    (progressData || []).map((p) => [p.lesson_id, p])
-  );
+      const totalLessons = allLessons.length;
+      const completedLessons =
+        progressData?.filter((p) => p.completed).length || 0;
+      const progressMap = new Map(
+        (progressData || []).map((p) => [p.lesson_id, p])
+      );
 
-  const lessonsWithProgress = (allLessons || []).map((lesson) => ({
-    ...lesson,
-    progress: progressMap.get(lesson.id) || null,
-  }));
+      const lessonsWithProgress = allLessons.map((lesson) => ({
+        ...lesson,
+        progress: progressMap.get(lesson.id) || null,
+      }));
 
-  const currentLesson = lessonsWithProgress.find(
-    (l) => !l.progress?.completed
-  );
+      const currentLesson = lessonsWithProgress.find(
+        (l) => !l.progress?.completed
+      );
 
-  const lastRead = lessonsWithProgress
-    .filter((l) => l.progress?.last_read_at)
-    .sort(
-      (a, b) =>
-        new Date(b.progress!.last_read_at!).getTime() -
-        new Date(a.progress!.last_read_at!).getTime()
-    );
+      const lastRead = lessonsWithProgress
+        .filter((l) => l.progress?.last_read_at)
+        .sort(
+          (a, b) =>
+            new Date(b.progress!.last_read_at!).getTime() -
+            new Date(a.progress!.last_read_at!).getTime()
+        );
 
-  const recentActivity = lastRead.slice(0, 5).map((l) => ({
-    lessonId: l.slug,
-    lessonTitle: l.title,
+      const recentActivity = lastRead.slice(0, 5).map((l) => ({
+        lessonId: l.slug,
+        lessonTitle: l.title,
+        chapter: l.chapter,
+        action: l.progress!.completed
+          ? ("completed" as const)
+          : ("continued" as const),
+        timestamp: l.progress!.last_read_at,
+      }));
+
+      const totalReadMinutes =
+        progressData?.reduce((sum, p) => {
+          const lesson = allLessons.find((l) => l.id === p.lesson_id);
+          return sum + (p.progress / 100) * (lesson?.estimated_minutes || 0);
+        }, 0) || 0;
+
+      return {
+        totalLessons,
+        completedLessons,
+        currentLessonSlug: currentLesson?.slug || null,
+        currentLessonTitle: currentLesson?.title || null,
+        currentLessonChapter: currentLesson?.chapter || null,
+        totalReadingTime: `${Math.round(totalReadMinutes / 60)}h ${Math.round(totalReadMinutes % 60)}min`,
+        lastSessionDate: lastRead[0]?.progress?.last_read_at || null,
+        streak: 0,
+        lessons: lessonsWithProgress,
+        recentActivity,
+      };
+    }
+  }
+
+  // Fallback: use static data with zero progress
+  const totalLessons = staticLessons.length;
+  const lessonsWithProgress = staticLessons.map((l) => ({
+    id: l.id,
     chapter: l.chapter,
-    action: l.progress!.completed
-      ? ("completed" as const)
-      : ("continued" as const),
-    timestamp: l.progress!.last_read_at,
+    slug: l.id,
+    title: l.title,
+    reading_time: l.readingTime,
+    estimated_minutes: l.estimatedMinutes,
+    progress: null,
   }));
-
-  const totalReadMinutes =
-    progressData?.reduce((sum, p) => {
-      const lesson = allLessons?.find((l) => l.id === p.lesson_id);
-      return sum + (p.progress / 100) * (lesson?.estimated_minutes || 0);
-    }, 0) || 0;
 
   return {
     totalLessons,
-    completedLessons,
-    currentLessonSlug: currentLesson?.slug || null,
-    currentLessonTitle: currentLesson?.title || null,
-    currentLessonChapter: currentLesson?.chapter || null,
-    totalReadingTime: `${Math.round(totalReadMinutes / 60)}h ${Math.round(totalReadMinutes % 60)}min`,
-    lastSessionDate: lastRead[0]?.progress?.last_read_at || null,
+    completedLessons: 0,
+    currentLessonSlug: staticLessons[0].id,
+    currentLessonTitle: staticLessons[0].title,
+    currentLessonChapter: staticLessons[0].chapter,
+    totalReadingTime: "0h 0min",
+    lastSessionDate: null,
     streak: 0,
     lessons: lessonsWithProgress,
-    recentActivity,
+    recentActivity: [],
   };
 }
 

@@ -116,6 +116,14 @@ export function AppSidebar({ accessLevel }: AppSidebarProps) {
             </Link>
           );
         })}
+        <div className="border-t border-panelborder my-2 mx-4" />
+        <Link
+          href="/course/final-project"
+          className="flex items-center gap-2 px-4 py-2.5 transition-colors border-l-2 border-transparent text-gold hover:bg-panelborder/20"
+        >
+          <span className="font-mono text-[11px] shrink-0 w-5 text-center">◆</span>
+          <span className="font-mono text-xs flex-1 truncate">Final Project</span>
+        </Link>
       </nav>
     </aside>
   );

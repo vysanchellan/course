@@ -89,6 +89,12 @@ export function Navbar({ variant = "marketing", user, accessLevel }: NavbarProps
               </>
             ) : (
               <>
+                <Link
+                  href="/troubleshooting"
+                  className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
+                >
+                  Troubleshooting
+                </Link>
                 {showSupport && (
                   <Link
                     href="/support"
@@ -175,6 +181,7 @@ export function Navbar({ variant = "marketing", user, accessLevel }: NavbarProps
                 <MobileLink href="/dashboard" label="Dashboard" />
                 <MobileLink href="/course" label="Course" />
                 <MobileLink href="/bookmarks" label="Bookmarks" />
+                <MobileLink href="/troubleshooting" label="Troubleshooting" />
                 {showSupport && (
                   <MobileLink href="/support" label="Support" />
                 )}
