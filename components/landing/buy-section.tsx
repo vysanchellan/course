@@ -81,14 +81,7 @@ export function BuySection() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-diffadd mt-0.5">✓</span>
-                  Email support at{" "}
-                  <a href="mailto:chellanvysan@gmail.com" className="text-gold hover:underline">
-                    chellanvysan@gmail.com
-                  </a>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-diffadd mt-0.5">✓</span>
-                  Priority responses within 24 hours
+                  Email support with priority responses
                 </li>
               </ul>
               <a
