@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-ink: #171310;
+    --color-parchment: #F3EEE1;
+    --color-dusk: #0B0B0D;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .cursor-blink,
+    .type-line {
+      animation: none !important;
+    }
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: #C9A24B;
+    color: #171310;
+  }
+
+  :focus-visible {
+    outline: 2px solid #C9A24B;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+@layer components {
+  .grain {
+    background-image: radial-gradient(circle, rgba(0,0,0,0.035) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+
+  .grain-light {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+
+  .terminal-dot {
+    @apply w-2.5 h-2.5 rounded-full;
+  }
+
+  .prose-course {
+    @apply prose prose-lg max-w-none;
+    @apply prose-headings:font-serif prose-headings:font-medium prose-headings:text-ink;
+    @apply prose-p:font-serif prose-p:leading-relaxed prose-p:text-ink/80;
+    @apply prose-a:text-gold prose-a:no-underline hover:prose-a:underline;
+    @apply prose-code:font-mono prose-code:text-sm prose-code:bg-parchment2 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded;
+    @apply prose-pre:bg-panel prose-pre:border prose-pre:border-panelborder prose-pre:rounded-md;
+    @apply prose-pre:shadow-none prose-pre:text-[#c9c6bd];
+    @apply prose-blockquote:border-gold prose-blockquote:font-serif prose-blockquote:italic;
+    @apply prose-strong:text-ink prose-strong:font-semibold;
+    @apply prose-hr:border-parchment2;
+    @apply prose-ol:font-serif prose-ul:font-serif;
+  }
+
+  .prose-course-dark {
+    @apply prose prose-lg max-w-none prose-invert;
+    @apply prose-headings:font-serif prose-headings:font-medium prose-headings:text-parchment;
+    @apply prose-p:font-serif prose-p:leading-relaxed prose-p:text-[#c9c6bd];
+    @apply prose-a:text-gold prose-a:no-underline hover:prose-a:underline;
+    @apply prose-code:font-mono prose-code:text-sm prose-code:bg-panelborder prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-goldsoft;
+    @apply prose-pre:bg-dusk prose-pre:border prose-pre:border-panelborder prose-pre:rounded-md;
+    @apply prose-pre:shadow-none prose-pre:text-[#c9c6bd];
+    @apply prose-blockquote:border-gold prose-blockquote:font-serif prose-blockquote:italic prose-blockquote:text-[#c9c6bd];
+    @apply prose-strong:text-parchment prose-strong:font-semibold;
+    @apply prose-hr:border-panelborder;
+    @apply prose-ol:font-serif prose-ul:font-serif prose-li:text-[#c9c6bd];
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
