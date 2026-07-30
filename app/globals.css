@@ -72,6 +72,7 @@
     @apply prose-strong:text-ink prose-strong:font-semibold;
     @apply prose-hr:border-parchment2;
     @apply prose-ol:font-serif prose-ul:font-serif;
+    @apply prose-li:marker:text-gold/70;
   }
 
   .prose-course-dark {
@@ -86,6 +87,270 @@
     @apply prose-strong:text-parchment prose-strong:font-semibold;
     @apply prose-hr:border-panelborder;
     @apply prose-ol:font-serif prose-ul:font-serif prose-li:text-[#c9c6bd];
+  }
+
+  /* ── lede paragraph ── */
+  .prose-course .lede,
+  .prose-course-dark .lede {
+    @apply font-serif italic text-lg md:text-xl text-ink/70 leading-relaxed;
+  }
+  .prose-course-dark .lede {
+    @apply text-[#c9c6bd]/75;
+  }
+
+  /* ── callout boxes ── */
+  .prose-course .box,
+  .prose-course-dark .box {
+    background: #EAE2CE;
+    border: 1px solid rgba(23,19,16,0.14);
+    border-left: 3px solid #C9A24B;
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin: 24px 0;
+  }
+  .prose-course .box .label,
+  .prose-course-dark .box .label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 8.6pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8a6f2a;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .prose-course .box.warn,
+  .prose-course-dark .box.warn {
+    border-left-color: #b3503a;
+  }
+  .prose-course .box.warn .label,
+  .prose-course-dark .box.warn .label {
+    color: #b3503a;
+  }
+  .prose-course .box.win,
+  .prose-course-dark .box.win {
+    border-left-color: #3FB97E;
+  }
+  .prose-course .box.win .label,
+  .prose-course-dark .box.win .label {
+    color: #2c8f61;
+  }
+  .prose-course-dark .box {
+    background: #151417;
+    border-color: #28262B;
+  }
+  .prose-course-dark .box .label {
+    color: #DEC17B;
+  }
+  .prose-course-dark .box.warn .label {
+    color: #e07060;
+  }
+  .prose-course-dark .box.win .label {
+    color: #5cd49a;
+  }
+
+  /* ── terminal blocks ── */
+  .prose-course .terminal,
+  .prose-course-dark .terminal {
+    background: #151417;
+    border: 1px solid #28262B;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 24px 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    color: #c9c6bd;
+    line-height: 1.75;
+  }
+  .prose-course .terminal .prompt,
+  .prose-course-dark .terminal .prompt {
+    color: #C9A24B;
+  }
+  .prose-course .terminal .ok,
+  .prose-course-dark .terminal .ok {
+    color: #3FB97E;
+  }
+  .prose-course .terminal .dim,
+  .prose-course-dark .terminal .dim {
+    color: #8B8981;
+  }
+  .prose-course .terminal .live,
+  .prose-course-dark .terminal .live {
+    color: #DEC17B;
+    font-weight: 700;
+  }
+
+  /* ── pull quotes ── */
+  .prose-course .pull,
+  .prose-course-dark .pull {
+    font-size: 17pt;
+    font-style: italic;
+    line-height: 1.4;
+    color: #171310;
+    margin: 26px 0;
+    padding-left: 18px;
+    border-left: 3px solid #C9A24B;
+  }
+  .prose-course-dark .pull {
+    color: #F3EEE1;
+  }
+
+  /* ── steps (gold-numbered lists) ── */
+  .prose-course ol.steps,
+  .prose-course-dark ol.steps {
+    list-style: none;
+    padding-left: 0;
+    counter-reset: step;
+  }
+  .prose-course ol.steps > li,
+  .prose-course-dark ol.steps > li {
+    position: relative;
+    padding-left: 40px;
+    margin-bottom: 14px;
+    counter-increment: step;
+  }
+  .prose-course ol.steps > li::before,
+  .prose-course-dark ol.steps > li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 26px;
+    height: 26px;
+    background: #171310;
+    color: #C9A24B;
+    border-radius: 50%;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .prose-course-dark ol.steps > li::before {
+    background: #C9A24B;
+    color: #171310;
+  }
+
+  /* ── comparison tables ── */
+  .prose-course table.cmp,
+  .prose-course-dark table.cmp {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0 22px;
+    font-size: 10pt;
+  }
+  .prose-course table.cmp th,
+  .prose-course table.cmp td,
+  .prose-course-dark table.cmp th,
+  .prose-course-dark table.cmp td {
+    border: 1px solid rgba(23,19,16,0.18);
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .prose-course table.cmp th,
+  .prose-course-dark table.cmp th {
+    background: #171310;
+    color: #C9A24B;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 8.8pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .prose-course table.cmp td.hl,
+  .prose-course-dark table.cmp td.hl {
+    background: #EAE2CE;
+    font-weight: 700;
+  }
+  .prose-course table.cmp tr:nth-child(even) td,
+  .prose-course-dark table.cmp tr:nth-child(even) td {
+    background: rgba(234,226,206,0.45);
+  }
+  .prose-course-dark table.cmp th {
+    background: #C9A24B;
+    color: #171310;
+  }
+  .prose-course-dark table.cmp td.hl {
+    background: #28262B;
+    color: #c9c6bd;
+  }
+  .prose-course-dark table.cmp tr:nth-child(even) td {
+    background: rgba(40,38,43,0.5);
+  }
+  .prose-course-dark table.cmp td {
+    border-color: #28262B;
+  }
+
+  /* ── tag chips ── */
+  .prose-course .chips,
+  .prose-course-dark .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0;
+  }
+  .prose-course .chip,
+  .prose-course-dark .chip {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.4pt;
+    font-weight: 700;
+    background: #EAE2CE;
+    border: 1px solid rgba(23,19,16,0.15);
+    border-radius: 3px;
+    padding: 7px 12px;
+    display: inline-block;
+  }
+  .prose-course .chip.gold,
+  .prose-course-dark .chip.gold {
+    background: #171310;
+    color: #C9A24B;
+  }
+  .prose-course .chip.ghost,
+  .prose-course-dark .chip.ghost {
+    background: transparent;
+    border-style: dashed;
+    color: #8B8981;
+  }
+  .prose-course-dark .chip {
+    background: #28262B;
+    border-color: #3a3840;
+    color: #c9c6bd;
+  }
+  .prose-course-dark .chip.gold {
+    background: #C9A24B;
+    color: #171310;
+  }
+
+  /* ── two-column layout ── */
+  .prose-course .two-col,
+  .prose-course-dark .two-col {
+    display: flex;
+    gap: 22px;
+    margin: 16px 0;
+  }
+  .prose-course .two-col > div,
+  .prose-course-dark .two-col > div {
+    flex: 1;
+  }
+  @media (max-width: 640px) {
+    .prose-course .two-col,
+    .prose-course-dark .two-col {
+      flex-direction: column;
+    }
+  }
+
+  /* ── inline code in prose ── */
+  .prose-course p code,
+  .prose-course li code,
+  .prose-course-dark p code,
+  .prose-course-dark li code {
+    @apply font-mono text-sm bg-parchment2 px-1.5 py-0.5 rounded;
+  }
+  .prose-course-dark p code,
+  .prose-course-dark li code {
+    @apply bg-panelborder text-goldsoft;
   }
 }
 

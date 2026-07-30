@@ -27,7 +27,7 @@ export default function PricingPage() {
             </div>
             <ul className="space-y-3 mb-8">
               {[
-                "Full 13-chapter guide",
+                "Full 14-chapter guide",
                 "Code examples and templates",
                 "All future updates",
                 "PDF download",

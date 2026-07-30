@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { lessons, defaultProgress, getLessonContent } from "@/lib/data";
+import { lessons, defaultProgress } from "@/lib/data";
+import { getLessonContent } from "@/lib/content";
 import { ReaderLayout } from "@/components/reader/reader-layout";
 
 interface LessonPageProps {
