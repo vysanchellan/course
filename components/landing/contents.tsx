@@ -1,3 +1,5 @@
+import { Reveal } from "./reveal";
+
 export function Contents() {
   const files = [
     { num: "00", name: "introduction.md" },
@@ -22,6 +24,7 @@ export function Contents() {
 
   return (
     <section className="relative py-28 px-6 md:px-16 overflow-hidden">
+      <Reveal>
       <div className="absolute inset-0 bg-gradient-to-b from-dusk via-[#0f0e10] to-dusk" />
       <div className="absolute inset-0 opacity-[0.04]"
         style={{
@@ -46,6 +49,7 @@ export function Contents() {
           ))}
         </div>
       </div>
+      </Reveal>
     </section>
   );
 }

@@ -1,3 +1,5 @@
+import { Reveal } from "./reveal";
+
 export function Stack() {
   const tags = [
     "Next.js 15",
@@ -13,6 +15,7 @@ export function Stack() {
 
   return (
     <section className="relative py-28 px-6 md:px-16 overflow-hidden">
+      <Reveal>
       <div className="absolute inset-0 bg-gradient-to-b from-dusk via-[#121110] to-dusk" />
       <div className="absolute inset-0 opacity-[0.03]"
         style={{
@@ -49,6 +52,7 @@ export function Stack() {
           </div>
         </div>
       </div>
+      </Reveal>
     </section>
   );
 }

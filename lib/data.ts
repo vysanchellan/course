@@ -43,6 +43,14 @@ export interface RecentActivity {
 
 export const lessons: Lesson[] = [
   {
+    id: "my-first-website",
+    chapter: -1,
+    title: "Start here — build something now",
+    description: "The quickest way to prove the guide works: ship a real page before you read a chapter.",
+    readingTime: "10 min to build",
+    estimatedMinutes: 10,
+  },
+  {
     id: "introduction",
     chapter: 0,
     title: "Introduction",
@@ -189,6 +197,7 @@ export const lessons: Lesson[] = [
 ];
 
 export const defaultProgress: Record<string, LessonProgress> = {
+  "my-first-website": { lessonId: "my-first-website", completed: false, bookmarked: false, progress: 0, lastReadAt: null },
   introduction: { lessonId: "introduction", completed: true, bookmarked: false, progress: 100, lastReadAt: "2026-07-28T14:30:00Z" },
   "toolkit-and-workflow": { lessonId: "toolkit-and-workflow", completed: true, bookmarked: false, progress: 100, lastReadAt: "2026-07-28T15:00:00Z" },
   "claude-code-vs-free-path": { lessonId: "claude-code-vs-free-path", completed: true, bookmarked: true, progress: 100, lastReadAt: "2026-07-28T16:00:00Z" },
@@ -210,7 +219,7 @@ export const defaultProgress: Record<string, LessonProgress> = {
 };
 
 export const courseState: CourseState = {
-  totalLessons: 18,
+  totalLessons: 19,
   completedLessons: 3,
   currentLessonId: "the-initial-build",
   totalReadingTime: "2h 10min",

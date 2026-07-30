@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 
 export async function isAdmin() {
   const supabase = await createServerSupabaseClient();
@@ -111,16 +112,28 @@ export async function grantAccess(formData: FormData) {
   const userId = formData.get("userId") as string;
   const courseId = formData.get("courseId") as string;
 
+  const tier = (formData.get("tier") as string) || "standard";
+
   const { error } = await supabase.from("purchases").upsert(
     {
       user_id: userId,
       course_id: courseId,
+      tier,
       status: "completed",
     },
     { onConflict: "user_id, course_id" }
   );
 
   if (error) return { error: error.message };
+
+  // Set has_active_purchase in user_metadata
+  const adminSupabase = createAdminSupabaseClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+    await adminSupabase.auth.admin.updateUserById(userId, {
+      user_metadata: { has_active_purchase: true },
+    });
+  }
 
   revalidatePath("/admin/users");
   revalidatePath("/admin/purchases");

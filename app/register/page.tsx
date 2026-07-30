@@ -1,7 +1,14 @@
 import { RegisterForm } from "./form";
 import Link from "next/link";
 
-export default function RegisterPage() {
+interface RegisterPageProps {
+  searchParams: Promise<{ tier?: string }>;
+}
+
+export default async function RegisterPage({ searchParams }: RegisterPageProps) {
+  const { tier } = await searchParams;
+  const validTier = tier === "premium" ? "premium" : "standard";
+
   return (
     <div className="min-h-screen bg-parchment flex items-center justify-center px-6">
       <div className="w-full max-w-sm">
@@ -13,9 +20,9 @@ export default function RegisterPage() {
         <div className="bg-parchment border border-ink/10 rounded-md p-8">
           <h1 className="font-serif text-2xl font-medium mb-1">Create your account.</h1>
           <p className="font-mono text-xs text-muteddark mb-6">
-            Get access to the full course.
+            {validTier === "premium" ? "Premium tier selected." : "Standard tier selected."}
           </p>
-          <RegisterForm />
+          <RegisterForm tier={validTier} />
           <p className="font-mono text-xs text-muteddark text-center mt-6">
             Already have access?{" "}
             <Link href="/login" className="text-gold hover:underline">

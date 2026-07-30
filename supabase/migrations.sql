@@ -44,9 +44,10 @@ CREATE TABLE IF NOT EXISTS purchases (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   course_id UUID REFERENCES courses(id) ON DELETE CASCADE NOT NULL,
-  payment_provider TEXT DEFAULT 'stripe',
+  tier TEXT DEFAULT 'standard' CHECK (tier IN ('standard', 'premium')),
+  payment_provider TEXT DEFAULT 'paypal',
   payment_id TEXT,
-  status TEXT DEFAULT 'completed' CHECK (status IN ('pending', 'completed', 'refunded', 'cancelled')),
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'refunded', 'cancelled')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(user_id, course_id)
 );

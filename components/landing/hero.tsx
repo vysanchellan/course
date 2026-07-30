@@ -27,25 +27,38 @@ export function Hero() {
             <div className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.25em] text-gold uppercase mb-8 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-4 py-1.5">
               A Practical Guide &middot; 2026
             </div>
-            <h1 className="font-serif text-[2.75rem] md:text-6xl leading-[1.05] font-medium mb-8 text-parchment">
-              From Zero
-              <br />
-              <span className="bg-gradient-to-r from-gold to-goldsoft bg-clip-text text-transparent">
-                to&nbsp;Deployed
-              </span>
-            </h1>
-            <p className="font-serif italic text-lg md:text-xl text-[#c9c6bd]/80 leading-relaxed mb-10">
-              Building real websites with AI, the right way — the exact stack, the
-              exact workflow, and the part after the build that nobody else
-              teaches.
-            </p>
-            <Link
-              href="/#buy"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-gold to-goldsoft text-ink font-mono text-sm font-bold px-6 py-3.5 rounded-sm hover:shadow-lg hover:shadow-gold/20 transition-all"
-            >
-              Get the guide — $10+
-              <span aria-hidden="true">→</span>
-            </Link>
+
+            {/* Question reveal sequence */}
+            <div className="hero-sequence mb-8">
+              <p className="hero-question-1 font-serif text-xl md:text-2xl leading-snug text-[#c9c6bd]">
+                You can build a website with AI in an afternoon.
+              </p>
+              <p className="hero-question-2 font-serif text-xl md:text-2xl leading-snug text-[#c9c6bd]">
+                So why can&rsquo;t you get paid for one?
+              </p>
+            </div>
+
+            {/* Headline and CTA (appears after reveal) */}
+            <div className="hero-main">
+              <h1 className="font-serif text-[2.75rem] md:text-6xl leading-[1.05] font-medium mb-8 text-parchment">
+                From Zero
+                <br />
+                <span className="bg-gradient-to-r from-gold to-goldsoft bg-clip-text text-transparent">
+                  to&nbsp;Deployed
+                </span>
+              </h1>
+              <p className="font-serif italic text-lg md:text-xl text-[#c9c6bd]/80 leading-relaxed mb-10">
+                Anyone can vibe-code a homepage. Almost nobody knows how to ship it,
+                sell it, and actually get paid.
+              </p>
+              <Link
+                href="/#buy"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-gold to-goldsoft text-ink font-mono text-sm font-bold px-6 py-3.5 rounded-sm hover:shadow-lg hover:shadow-gold/20 transition-all"
+              >
+                Get the guide — $10+
+                <span aria-hidden="true">→</span>
+              </Link>
+            </div>
           </div>
         </div>
 

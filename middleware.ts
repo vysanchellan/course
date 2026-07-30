@@ -10,10 +10,12 @@ const publicPaths = [
   "/contact",
   "/login",
   "/register",
+  "/checkout",
   "/auth/callback",
   "/auth/forgot-password",
   "/auth/reset-password",
   "/api/seed",
+  "/api/payments",
 ];
 
 const appPaths = [
@@ -21,6 +23,7 @@ const appPaths = [
   "/course",
   "/bookmarks",
   "/settings",
+  "/support",
 ];
 
 const adminPaths = ["/admin"];
@@ -55,6 +58,18 @@ export async function middleware(request: NextRequest) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  // App paths require a purchase (or admin role)
+  const isAppPath = appPaths.some((p) => pathname.startsWith(p));
+  if (isAppPath && user) {
+    const isAdmin = user.user_metadata?.role === "admin";
+    const hasPurchase = user.user_metadata?.has_active_purchase === true;
+    if (!isAdmin && !hasPurchase) {
+      const pricingUrl = new URL("/pricing", request.url);
+      pricingUrl.searchParams.set("from", pathname);
+      return NextResponse.redirect(pricingUrl);
     }
   }
 

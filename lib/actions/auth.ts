@@ -10,12 +10,13 @@ export async function signUp(formData: FormData) {
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+  const tier = (formData.get("tier") as string) || "standard";
 
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { name },
+      data: { name, selected_tier: tier },
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
     },
   });
@@ -24,8 +25,7 @@ export async function signUp(formData: FormData) {
     return { error: error.message };
   }
 
-  // TODO: After signup, redirect to payment in Phase 3
-  redirect("/login?verified=true");
+  redirect(`/checkout?tier=${tier}`);
 }
 
 export async function signIn(formData: FormData) {

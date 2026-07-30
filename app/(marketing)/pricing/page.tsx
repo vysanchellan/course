@@ -42,9 +42,8 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
-            {/* TODO: Replace with actual payment flow in Phase 2 */}
             <Link
-              href="/register"
+              href="/register?tier=standard"
               className="block w-full bg-gold text-ink font-mono font-bold text-sm py-3.5 rounded-sm hover:bg-goldsoft transition-colors text-center"
             >
               Get access
@@ -78,9 +77,8 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
-            {/* TODO: Replace with actual payment flow in Phase 2 */}
             <Link
-              href="/register"
+              href="/register?tier=premium"
               className="block w-full bg-gold text-ink font-mono font-bold text-sm py-3.5 rounded-sm hover:bg-goldsoft transition-colors text-center"
             >
               Get access

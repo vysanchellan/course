@@ -1,6 +1,9 @@
+import { Reveal } from "./reveal";
+
 export function Problem() {
   return (
     <section className="relative py-28 px-6 md:px-16 overflow-hidden">
+      <Reveal>
       <div className="absolute inset-0 bg-gradient-to-b from-dusk via-[#121110] to-dusk" />
       <div className="absolute inset-0 opacity-[0.05]"
         style={{
@@ -29,6 +32,7 @@ export function Problem() {
           </p>
         </div>
       </div>
+      </Reveal>
     </section>
   );
 }

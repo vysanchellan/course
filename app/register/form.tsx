@@ -4,6 +4,10 @@ import { useActionState } from "react";
 import { signUp } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 
+interface RegisterFormProps {
+  tier: string;
+}
+
 async function signUpAction(
   _prev: { error?: string } | null,
   formData: FormData
@@ -11,7 +15,7 @@ async function signUpAction(
   return signUp(formData);
 }
 
-export function RegisterForm() {
+export function RegisterForm({ tier }: RegisterFormProps) {
   const [state, action, pending] = useActionState(signUpAction, null);
 
   return (
@@ -21,6 +25,7 @@ export function RegisterForm() {
           {state.error}
         </div>
       )}
+      <input type="hidden" name="tier" value={tier} />
       <div>
         <label htmlFor="name" className="block font-mono text-xs font-medium text-ink/70 uppercase tracking-wider mb-1.5">
           Name

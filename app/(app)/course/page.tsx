@@ -90,6 +90,8 @@ export default function CourseOverviewPage() {
                     >
                       <path d="M20 6 9 17l-5-5" />
                     </svg>
+                  ) : lesson.id === "my-first-website" ? (
+                    <span className="text-gold">★</span>
                   ) : (
                     lesson.chapter
                   )}

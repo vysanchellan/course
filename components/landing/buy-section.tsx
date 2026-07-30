@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { Reveal } from "./reveal";
+
 export function BuySection() {
   return (
     <section id="buy" className="relative py-28 px-6 md:px-16 overflow-hidden">
@@ -17,81 +20,101 @@ export function BuySection() {
         }}
       />
       <div className="relative max-w-3xl mx-auto">
-        <div className="text-center mb-14">
-          <div className="font-mono text-[13px] text-muteddark mb-2">
-            <span className="text-gold">$</span> get-the-guide{" "}
-            <span className="cursor-blink text-gold">▌</span>
+        <Reveal>
+          <div className="text-center mb-14">
+            <div className="font-mono text-[13px] text-muteddark mb-2">
+              <span className="text-gold">$</span> get-the-guide{" "}
+              <span className="cursor-blink text-gold">▌</span>
+            </div>
+            <h2 className="font-serif text-3xl md:text-4xl font-medium text-parchment mt-4">
+              Choose your access.
+            </h2>
           </div>
-          <h2 className="font-serif text-3xl md:text-4xl font-medium text-parchment mt-4">
-            Choose your access.
-          </h2>
-        </div>
+        </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Basic */}
-          <div className="group relative bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-xl p-8 flex flex-col hover:border-gold/30 transition-all">
-            <div className="absolute inset-0 bg-gradient-to-b from-gold/[0.02] to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-            <div className="relative">
-              <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-2">
-                Basic
+          <Reveal>
+            <div className="group relative bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-xl p-8 flex flex-col hover:border-gold/30 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-b from-gold/[0.02] to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              <div className="relative">
+                <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-2">
+                  Standard
+                </div>
+                <div className="font-serif text-4xl font-medium text-parchment mb-4">
+                  $10
+                </div>
+                <div className="font-mono text-xs text-muteddark mb-6">
+                  One-time payment
+                </div>
+                <ul className="space-y-3 mb-8">
+                  {[
+                    "Full 14-chapter guide",
+                    "Code examples and templates",
+                    "All future updates",
+                    "PDF download",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-sm text-[#c9c6bd] font-mono">
+                      <span className="text-diffadd">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                          <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/register?tier=standard"
+                  className="block w-full bg-white/10 backdrop-blur-sm text-parchment font-mono font-bold text-sm py-4 rounded-sm text-center border border-white/10 hover:bg-white/20 transition-all"
+                >
+                  Get access — $10
+                </Link>
               </div>
-              <div className="font-serif text-4xl font-medium text-parchment mb-4">
-                $10
-              </div>
-              <ul className="font-mono text-xs text-[#c9c6bd]/80 space-y-2.5 mb-8 flex-1">
-                <li className="flex items-start gap-2">
-                  <span className="text-diffadd mt-0.5">✓</span>
-                  Full course access on this website
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-diffadd mt-0.5">✓</span>
-                  All 18 lessons, toolkit, cheat sheet
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-diffadd mt-0.5">✓</span>
-                  Lifetime updates
-                </li>
-              </ul>
-              <a
-                href="#"
-                className="block w-full bg-white/10 backdrop-blur-sm text-parchment font-mono font-bold text-sm py-4 rounded-sm text-center border border-white/10 hover:bg-white/20 transition-all"
-              >
-                Get access
-              </a>
             </div>
-          </div>
+          </Reveal>
 
-          {/* Standard */}
-          <div className="group relative bg-gradient-to-b from-gold/[0.06] to-transparent backdrop-blur-sm border border-gold/30 rounded-xl p-8 flex flex-col">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-gold to-goldsoft text-ink font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-lg shadow-gold/20">
-              Popular
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-b from-gold/[0.04] to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-            <div className="relative">
-              <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-2">
-                Standard
+          <Reveal>
+            <div className="group relative bg-gradient-to-b from-gold/[0.06] to-transparent backdrop-blur-sm border border-gold/30 rounded-xl p-8 flex flex-col">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-gold to-goldsoft text-ink font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-lg shadow-gold/20">
+                Popular
               </div>
-              <div className="font-serif text-4xl font-medium text-parchment mb-4">
-                $14
+              <div className="absolute inset-0 bg-gradient-to-b from-gold/[0.04] to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              <div className="relative">
+                <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-2">
+                  Premium
+                </div>
+                <div className="font-serif text-4xl font-medium text-parchment mb-4">
+                  $13
+                </div>
+                <div className="font-mono text-xs text-muteddark mb-6">
+                  One-time payment
+                </div>
+                <ul className="space-y-3 mb-8">
+                  {[
+                    "Everything in Standard",
+                    "Personal project walkthrough",
+                    "Direct access for questions",
+                    "Priority support",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-sm text-[#c9c6bd] font-mono">
+                      <span className="text-diffadd">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                          <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/register?tier=premium"
+                  className="block w-full bg-gradient-to-r from-gold to-goldsoft text-ink font-mono font-bold text-sm py-4 rounded-sm text-center hover:shadow-lg hover:shadow-gold/20 transition-all"
+                >
+                  Get access + support — $13
+                </Link>
               </div>
-              <ul className="font-mono text-xs text-[#c9c6bd]/80 space-y-2.5 mb-8 flex-1">
-                <li className="flex items-start gap-2">
-                  <span className="text-diffadd mt-0.5">✓</span>
-                  Everything in Basic
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-diffadd mt-0.5">✓</span>
-                  Email support with priority responses
-                </li>
-              </ul>
-              <a
-                href="#"
-                className="block w-full bg-gradient-to-r from-gold to-goldsoft text-ink font-mono font-bold text-sm py-4 rounded-sm text-center hover:shadow-lg hover:shadow-gold/20 transition-all"
-              >
-                Get access + support
-              </a>
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

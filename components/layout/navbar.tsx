@@ -5,6 +5,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/lib/actions/auth";
+import type { AccessLevel } from "@/lib/access";
 
 interface User {
   id?: string;
@@ -15,10 +16,12 @@ interface User {
 interface NavbarProps {
   variant?: "marketing" | "app";
   user?: User | null;
+  accessLevel?: AccessLevel;
 }
 
-export function Navbar({ variant = "marketing", user }: NavbarProps) {
+export function Navbar({ variant = "marketing", user, accessLevel }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const showSupport = accessLevel === "premium" || accessLevel === "admin";
 
   return (
     <>
@@ -85,6 +88,14 @@ export function Navbar({ variant = "marketing", user }: NavbarProps) {
               </>
             ) : (
               <>
+                {showSupport && (
+                  <Link
+                    href="/support"
+                    className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
+                  >
+                    Support
+                  </Link>
+                )}
                 <Link
                   href="/bookmarks"
                   className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
@@ -162,6 +173,9 @@ export function Navbar({ variant = "marketing", user }: NavbarProps) {
                 <MobileLink href="/dashboard" label="Dashboard" />
                 <MobileLink href="/course" label="Course" />
                 <MobileLink href="/bookmarks" label="Bookmarks" />
+                {showSupport && (
+                  <MobileLink href="/support" label="Support" />
+                )}
                 <MobileLink href="/settings" label="Settings" />
                 {user && (
                   <div className="pt-2 border-t border-panelborder">
