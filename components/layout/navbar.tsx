@@ -5,12 +5,20 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { SearchModal } from "@/components/ui/search-modal";
+import { signOut } from "@/lib/actions/auth";
+
+interface User {
+  id?: string;
+  email?: string;
+  name?: string;
+}
 
 interface NavbarProps {
   variant?: "marketing" | "app";
+  user?: User | null;
 }
 
-export function Navbar({ variant = "marketing" }: NavbarProps) {
+export function Navbar({ variant = "marketing", user }: NavbarProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -56,15 +64,26 @@ export function Navbar({ variant = "marketing" }: NavbarProps) {
                 >
                   Pricing
                 </Link>
-                <Link
-                  href="/login"
-                  className="font-mono text-xs text-ink/60 hover:text-ink transition-colors"
-                >
-                  Login
-                </Link>
-                <Button variant="primary" size="sm" asChild>
-                  <Link href="/register">Get Started</Link>
-                </Button>
+                {user ? (
+                  <Link
+                    href="/dashboard"
+                    className="font-mono text-xs text-ink/60 hover:text-ink transition-colors"
+                  >
+                    Dashboard
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      href="/login"
+                      className="font-mono text-xs text-ink/60 hover:text-ink transition-colors"
+                    >
+                      Login
+                    </Link>
+                    <Button variant="primary" size="sm" asChild>
+                      <Link href="/register">Get Started</Link>
+                    </Button>
+                  </>
+                )}
               </>
             ) : (
               <>
@@ -100,6 +119,21 @@ export function Navbar({ variant = "marketing" }: NavbarProps) {
                 >
                   Settings
                 </Link>
+                {user && (
+                  <div className="flex items-center gap-3 pl-3 border-l border-panelborder">
+                    <span className="font-mono text-xs text-muteddark">
+                      {user.name || user.email?.split("@")[0] || "User"}
+                    </span>
+                    <form action={signOut}>
+                      <button
+                        type="submit"
+                        className="font-mono text-xs text-muteddark hover:text-[#b3503a] transition-colors"
+                      >
+                        Sign out
+                      </button>
+                    </form>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -128,16 +162,22 @@ export function Navbar({ variant = "marketing" }: NavbarProps) {
         </nav>
 
         {mobileOpen && (
-          <div className="md:hidden border-t border-ink/10 bg-parchment px-6 py-4 space-y-3">
+          <div className="md:hidden border-t border-panelborder bg-panel px-6 py-4 space-y-3">
             {variant === "marketing" ? (
               <>
                 <MobileLink href="/about" label="About" />
                 <MobileLink href="/faq" label="FAQ" />
                 <MobileLink href="/pricing" label="Pricing" />
-                <MobileLink href="/login" label="Login" />
-                <Button variant="primary" size="md" className="w-full mt-2" asChild>
-                  <Link href="/register">Get Started</Link>
-                </Button>
+                {user ? (
+                  <MobileLink href="/dashboard" label="Dashboard" />
+                ) : (
+                  <>
+                    <MobileLink href="/login" label="Login" />
+                    <Button variant="primary" size="md" className="w-full mt-2" asChild>
+                      <Link href="/register">Get Started</Link>
+                    </Button>
+                  </>
+                )}
               </>
             ) : (
               <>
@@ -146,6 +186,18 @@ export function Navbar({ variant = "marketing" }: NavbarProps) {
                 <MobileLink href="/bookmarks" label="Bookmarks" />
                 <MobileLink href="/search" label="Search" />
                 <MobileLink href="/settings" label="Settings" />
+                {user && (
+                  <div className="pt-2 border-t border-panelborder">
+                    <form action={signOut}>
+                      <button
+                        type="submit"
+                        className="font-mono text-sm text-muteddark hover:text-[#b3503a] transition-colors py-1"
+                      >
+                        Sign out
+                      </button>
+                    </form>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -161,7 +213,7 @@ function MobileLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="block font-mono text-sm text-ink/70 hover:text-ink transition-colors py-1"
+      className="block font-mono text-sm text-muteddark hover:text-parchment transition-colors py-1"
     >
       {label}
     </Link>

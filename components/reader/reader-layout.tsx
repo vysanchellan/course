@@ -42,7 +42,7 @@ export function ReaderLayout({
       <ReadingProgress />
 
       <div className="flex min-h-screen">
-        <SideToc currentLessonId={lesson.id} />
+        <SideToc currentLessonSlug={lesson.id} />
 
         {/* Main content */}
         <main className="flex-1 min-w-0 px-6 md:px-12 lg:px-16 py-10 md:py-14 max-w-4xl mx-auto">

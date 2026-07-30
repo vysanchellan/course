@@ -1,10 +1,23 @@
 import Link from "next/link";
-import { bookmarks } from "@/lib/data";
 
-export function BookmarksWidget() {
+interface BookmarkItem {
+  id: string;
+  lessonId: string;
+  lessonSlug: string;
+  lessonTitle: string;
+  chapter: number;
+  excerpt: string | null;
+  timestamp: string;
+}
+
+export function BookmarksWidget({
+  bookmarks,
+}: {
+  bookmarks: BookmarkItem[];
+}) {
   if (bookmarks.length === 0) {
     return (
-      <div className="bg-parchment border border-ink/10 rounded-md p-6">
+      <div className="bg-panel border border-panelborder rounded-md p-6">
         <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-3">
           Bookmarks
         </div>
@@ -17,16 +30,16 @@ export function BookmarksWidget() {
   }
 
   return (
-    <div className="bg-parchment border border-ink/10 rounded-md p-6">
+    <div className="bg-panel border border-panelborder rounded-md p-6">
       <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-4">
         Bookmarks
       </div>
       <div className="space-y-0">
-        {bookmarks.map((bm) => (
+        {bookmarks.slice(0, 3).map((bm) => (
           <Link
             key={bm.id}
-            href={`/course/${bm.lessonId}`}
-            className="block py-3 border-b border-ink/5 last:border-0 hover:bg-ink/[0.02] -mx-6 px-6 transition-colors"
+            href={`/course/${bm.lessonSlug}`}
+            className="block py-3 border-b border-panelborder last:border-0 hover:bg-panelborder/20 -mx-6 px-6 transition-colors"
           >
             <div className="flex items-center gap-2 mb-1">
               <svg
@@ -39,16 +52,18 @@ export function BookmarksWidget() {
               >
                 <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
               </svg>
-              <span className="font-mono text-xs text-ink truncate">
+              <span className="font-mono text-xs text-parchment truncate">
                 {bm.lessonTitle}
               </span>
               <span className="font-mono text-[10px] text-muteddark shrink-0">
                 Ch. {bm.chapter}
               </span>
             </div>
-            <p className="font-serif text-xs text-ink/60 leading-relaxed line-clamp-2 ml-6">
-              &ldquo;{bm.excerpt}&rdquo;
-            </p>
+            {bm.excerpt && (
+              <p className="font-serif text-xs text-[#c9c6bd]/60 leading-relaxed line-clamp-2 ml-6">
+                &ldquo;{bm.excerpt}&rdquo;
+              </p>
+            )}
           </Link>
         ))}
       </div>

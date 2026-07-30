@@ -1,37 +1,36 @@
-import { notFound } from "next/navigation";
-import { lessons, defaultProgress } from "@/lib/data";
-import { getLessonContent } from "@/lib/content";
-import { ReaderLayout } from "@/components/reader/reader-layout";
+import { notFound, redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/actions/auth";
+import { getLessonWithProgress } from "@/lib/actions/lessons";
+import { hasAccess } from "@/lib/actions/purchases";
+import { ReaderPageClient } from "./reader-client";
 
 interface LessonPageProps {
   params: Promise<{ lessonId: string }>;
 }
 
-export async function generateStaticParams() {
-  return lessons.map((lesson) => ({
-    lessonId: lesson.id,
-  }));
-}
-
 export default async function LessonPage({ params }: LessonPageProps) {
   const { lessonId } = await params;
-  const lesson = lessons.find((l) => l.id === lessonId);
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect(`/login?redirect=/course/${lessonId}`);
+  }
+
+  const hasCourseAccess = await hasAccess();
+  // In development without DB seeded, allow access
+  // TODO: Remove the !hasCourseAccess check once seed is run
+  // if (!hasCourseAccess) redirect("/pricing");
+
+  const lesson = await getLessonWithProgress(lessonId);
 
   if (!lesson) {
     notFound();
   }
 
-  const progress = defaultProgress[lesson.id] ?? {
-    lessonId: lesson.id,
-    completed: false,
-    bookmarked: false,
-    progress: 0,
-    lastReadAt: null,
-  };
-
-  const content = getLessonContent(lessonId);
-
   return (
-    <ReaderLayout lesson={lesson} progress={progress} content={content} />
+    <ReaderPageClient
+      lesson={lesson}
+      userId={user.id}
+    />
   );
 }

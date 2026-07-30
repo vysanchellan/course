@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { recentActivity } from "@/lib/data";
+
+interface ActivityItem {
+  lessonId: string;
+  lessonTitle: string;
+  chapter: number;
+  action: "started" | "continued" | "completed";
+  timestamp: string;
+}
 
 const actionLabels: Record<string, string> = {
   started: "Started",
@@ -14,18 +21,35 @@ const actionColors: Record<string, string> = {
   completed: "text-diffadd",
 };
 
-export function RecentLessons() {
+export function RecentLessons({
+  activities,
+}: {
+  activities: ActivityItem[];
+}) {
+  if (activities.length === 0) {
+    return (
+      <div className="bg-panel border border-panelborder rounded-md p-6">
+        <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-3">
+          Recent Activity
+        </div>
+        <p className="font-mono text-xs text-muteddark">
+          No activity yet. Start reading to track your progress.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-parchment border border-ink/10 rounded-md p-6">
+    <div className="bg-panel border border-panelborder rounded-md p-6">
       <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-4">
         Recent Activity
       </div>
       <div className="space-y-0">
-        {recentActivity.map((activity, i) => (
+        {activities.map((activity, i) => (
           <Link
             key={`${activity.lessonId}-${i}`}
             href={`/course/${activity.lessonId}`}
-            className="flex items-center gap-3 py-3 border-b border-ink/5 last:border-0 hover:bg-ink/[0.02] -mx-6 px-6 transition-colors"
+            className="flex items-center gap-3 py-3 border-b border-panelborder last:border-0 hover:bg-panelborder/20 -mx-6 px-6 transition-colors"
           >
             <span
               className={cn(
@@ -36,7 +60,7 @@ export function RecentLessons() {
               {actionLabels[activity.action]}
             </span>
             <div className="flex-1 min-w-0">
-              <div className="font-mono text-xs text-ink truncate">
+              <div className="font-mono text-xs text-parchment truncate">
                 {activity.lessonTitle}
               </div>
               <div className="font-mono text-[10px] text-muteddark mt-0.5">

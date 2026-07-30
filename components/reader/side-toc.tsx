@@ -2,27 +2,26 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { lessons, defaultProgress, courseState } from "@/lib/data";
+import { lessons } from "@/lib/data";
 
 interface SideTocProps {
-  currentLessonId: string;
+  currentLessonSlug: string;
 }
 
-export function SideToc({ currentLessonId }: SideTocProps) {
+export function SideToc({ currentLessonSlug }: SideTocProps) {
   return (
-    <aside className="hidden xl:flex flex-col w-56 border-r border-ink/10 bg-parchment/50 shrink-0">
-      <div className="p-4 border-b border-ink/10">
+    <aside className="hidden xl:flex flex-col w-56 border-r border-panelborder bg-panel shrink-0">
+      <div className="p-4 border-b border-panelborder">
         <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider">
           Course
         </div>
         <div className="font-mono text-[11px] text-muteddark mt-1">
-          {courseState.completedLessons}/{courseState.totalLessons} complete
+          {lessons.length} lessons
         </div>
       </div>
       <nav className="flex-1 overflow-y-auto py-2">
         {lessons.map((lesson) => {
-          const prog = defaultProgress[lesson.id];
-          const isActive = lesson.id === currentLessonId;
+          const isActive = lesson.id === currentLessonSlug;
           return (
             <Link
               key={lesson.id}
@@ -30,8 +29,8 @@ export function SideToc({ currentLessonId }: SideTocProps) {
               className={cn(
                 "flex items-center gap-2 px-4 py-2 transition-colors border-l-2",
                 isActive
-                  ? "bg-ink/5 border-gold text-ink"
-                  : "border-transparent text-muteddark hover:text-ink hover:bg-ink/[0.02]"
+                  ? "bg-panelborder/30 border-gold text-parchment"
+                  : "border-transparent text-muteddark hover:text-parchment hover:bg-panelborder/20"
               )}
             >
               <span
@@ -45,20 +44,6 @@ export function SideToc({ currentLessonId }: SideTocProps) {
               <span className="font-mono text-[11px] leading-snug flex-1 line-clamp-2">
                 {lesson.title}
               </span>
-              {prog?.completed && (
-                <span className="text-diffadd shrink-0">
-                  <svg
-                    width="10"
-                    height="10"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                  >
-                    <path d="M20 6 9 17l-5-5" />
-                  </svg>
-                </span>
-              )}
             </Link>
           );
         })}

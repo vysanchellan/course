@@ -1,41 +1,55 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { lessons, defaultProgress, courseState } from "@/lib/data";
 
-export function CourseProgressList() {
-  const pathname = usePathname();
+interface ProgressItem {
+  id: string;
+  chapter: number;
+  slug: string;
+  title: string;
+  reading_time: string | null;
+  estimated_minutes: number;
+  progress: {
+    completed: boolean;
+    progress: number;
+  } | null;
+}
+
+export function CourseProgressList({
+  lessons,
+}: {
+  lessons: ProgressItem[];
+}) {
+  if (lessons.length === 0) {
+    return (
+      <div className="bg-panel border border-panelborder rounded-md p-6">
+        <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-3">
+          All Lessons
+        </div>
+        <p className="font-mono text-xs text-muteddark">No lessons available.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-parchment border border-ink/10 rounded-md p-6">
+    <div className="bg-panel border border-panelborder rounded-md p-6">
       <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider mb-4">
         All Lessons
       </div>
       <div className="space-y-0">
         {lessons.map((lesson) => {
-          const prog = defaultProgress[lesson.id];
-          const isActive = pathname === `/course/${lesson.id}`;
+          const prog = lesson.progress;
           return (
             <Link
               key={lesson.id}
-              href={`/course/${lesson.id}`}
-              className={cn(
-                "flex items-center gap-3 py-3 px-3 -mx-3 rounded-sm transition-colors",
-                isActive
-                  ? "bg-ink/5"
-                  : "hover:bg-ink/[0.02]"
-              )}
+              href={`/course/${lesson.slug}`}
+              className="flex items-center gap-3 py-3 px-3 -mx-3 rounded-sm hover:bg-panelborder/20 transition-colors"
             >
               <span
                 className={cn(
                   "flex items-center justify-center w-7 h-7 rounded-full border text-[11px] font-mono shrink-0",
                   prog?.completed
                     ? "bg-diffadd/10 border-diffadd/30 text-diffadd"
-                    : isActive
-                      ? "border-gold text-gold"
-                      : "border-ink/20 text-muteddark"
+                    : "border-panelborder text-muteddark"
                 )}
               >
                 {prog?.completed ? (
@@ -54,12 +68,12 @@ export function CourseProgressList() {
                 )}
               </span>
               <div className="flex-1 min-w-0">
-                <div className="font-mono text-xs text-ink truncate">
+                <div className="font-mono text-xs text-parchment truncate">
                   {lesson.title}
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">
                   <span className="font-mono text-[10px] text-muteddark">
-                    {lesson.readingTime}
+                    {lesson.reading_time || `${lesson.estimated_minutes} min read`}
                   </span>
                   {prog && !prog.completed && prog.progress > 0 && (
                     <>
@@ -72,12 +86,10 @@ export function CourseProgressList() {
                 </div>
               </div>
               {prog?.completed ? (
-                <span className="font-mono text-[10px] text-diffadd shrink-0">
-                  done
-                </span>
-              ) : isActive ? (
+                <span className="font-mono text-[10px] text-diffadd shrink-0">done</span>
+              ) : prog && prog.progress > 0 ? (
                 <span className="font-mono text-[10px] text-gold shrink-0">
-                  current
+                  {prog.progress}%
                 </span>
               ) : null}
             </Link>

@@ -1,10 +1,39 @@
-import { ContinueReading } from "@/components/dashboard/continue-reading";
-import { CompletionStats } from "@/components/dashboard/completion-stats";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/actions/auth";
+import { getDashboardProgress } from "@/lib/actions/progress";
+import { getBookmarks } from "@/lib/actions/bookmarks";
+import { ContinueReadingCard } from "@/components/dashboard/continue-reading";
+import { CompletionStatsCard } from "@/components/dashboard/completion-stats";
 import { RecentLessons } from "@/components/dashboard/recent-lessons";
 import { BookmarksWidget } from "@/components/dashboard/bookmarks-widget";
 import { CourseProgressList } from "@/components/dashboard/course-progress-list";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  const [dashboard, bookmarks] = await Promise.all([
+    getDashboardProgress(),
+    getBookmarks(),
+  ]);
+
+  if (!dashboard) {
+    return (
+      <div className="px-6 md:px-12 py-10 max-w-3xl mx-auto">
+        <div className="text-center py-20">
+          <div className="font-mono text-xs text-muteddark mb-2">No course data found</div>
+          <p className="font-serif text-lg text-ink/60">
+            Run the seed endpoint to populate the database.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const percentage = dashboard.totalLessons > 0
+    ? Math.round((dashboard.completedLessons / dashboard.totalLessons) * 100)
+    : 0;
+
   return (
     <div className="px-6 md:px-12 py-10 max-w-5xl mx-auto">
       <div className="mb-8">
@@ -21,17 +50,28 @@ export default function DashboardPage() {
 
       <div className="grid md:grid-cols-3 gap-6 mb-8">
         <div className="md:col-span-2">
-          <ContinueReading />
+          <ContinueReadingCard
+            slug={dashboard.currentLessonSlug}
+            title={dashboard.currentLessonTitle}
+            chapter={dashboard.currentLessonChapter}
+          />
         </div>
-        <CompletionStats />
+        <CompletionStatsCard
+          totalLessons={dashboard.totalLessons}
+          completedLessons={dashboard.completedLessons}
+          percentage={percentage}
+          totalReadingTime={dashboard.totalReadingTime}
+          lastSessionDate={dashboard.lastSessionDate}
+          streak={dashboard.streak}
+        />
       </div>
 
       <div className="grid md:grid-cols-2 gap-6 mb-8">
-        <RecentLessons />
-        <BookmarksWidget />
+        <RecentLessons activities={dashboard.recentActivity} />
+        <BookmarksWidget bookmarks={bookmarks} />
       </div>
 
-      <CourseProgressList />
+      <CourseProgressList lessons={dashboard.lessons} />
     </div>
   );
 }

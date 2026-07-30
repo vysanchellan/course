@@ -1,13 +1,12 @@
-"use client";
+import { redirect } from "next/navigation";
+import { getCurrentUser, getProfile } from "@/lib/actions/auth";
+import { SettingsForm } from "./form";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+export default async function SettingsPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
 
-// TODO: Replace with backend-connected settings in Phase 2
-
-export default function SettingsPage() {
-  const [readerMode, setReaderMode] = useState<"serif" | "sans">("serif");
-  const [fontSize, setFontSize] = useState(100);
+  const profile = await getProfile();
 
   return (
     <div className="px-6 md:px-12 py-10 max-w-2xl mx-auto">
@@ -20,52 +19,11 @@ export default function SettingsPage() {
 
       <div className="space-y-6">
         <div className="bg-panel border border-panelborder rounded-md p-6">
-          <h2 className="font-mono text-sm text-parchment mb-4">
-            Reading Mode
-          </h2>
-          <div className="flex gap-3">
-            <button
-              onClick={() => setReaderMode("serif")}
-              className={`flex-1 p-3 rounded-sm border text-center transition-colors ${
-                readerMode === "serif"
-                  ? "border-gold bg-gold/10 text-gold"
-                  : "border-panelborder text-muteddark hover:text-parchment"
-              }`}
-            >
-              <span className="font-serif text-lg">Serif</span>
-            </button>
-            <button
-              onClick={() => setReaderMode("sans")}
-              className={`flex-1 p-3 rounded-sm border text-center transition-colors ${
-                readerMode === "sans"
-                  ? "border-gold bg-gold/10 text-gold"
-                  : "border-panelborder text-muteddark hover:text-parchment"
-              }`}
-            >
-              <span className="font-sans text-lg">Sans</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="bg-panel border border-panelborder rounded-md p-6">
-          <h2 className="font-mono text-sm text-parchment mb-4">
-            Font Size
-          </h2>
-          <div className="flex items-center gap-4">
-            <span className="font-mono text-xs text-muteddark">A</span>
-            <input
-              type="range"
-              min={80}
-              max={150}
-              value={fontSize}
-              onChange={(e) => setFontSize(Number(e.target.value))}
-              className="flex-1 accent-gold"
-            />
-            <span className="font-mono text-lg text-parchment">A</span>
-            <span className="font-mono text-xs text-muteddark w-8">
-              {fontSize}%
-            </span>
-          </div>
+          <h2 className="font-mono text-sm text-parchment mb-4">Profile</h2>
+          <SettingsForm
+            name={profile?.name || ""}
+            email={user.email || ""}
+          />
         </div>
 
         <div className="bg-panel border border-panelborder rounded-md p-6">
@@ -74,21 +32,20 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between py-2">
               <span className="font-mono text-xs text-muteddark">Email</span>
               <span className="font-mono text-xs text-parchment">
-                user@example.com
+                {user.email}
               </span>
             </div>
             <div className="flex items-center justify-between py-2">
               <span className="font-mono text-xs text-muteddark">Member since</span>
               <span className="font-mono text-xs text-parchment">
-                July 2026
+                {user.created_at
+                  ? new Date(user.created_at).toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })
+                  : "Recent"}
               </span>
             </div>
-          </div>
-          <div className="mt-4 pt-4 border-t border-panelborder">
-            {/* TODO: Connect to auth system in Phase 2 */}
-            <Button variant="outline" size="sm">
-              Sign out
-            </Button>
           </div>
         </div>
       </div>

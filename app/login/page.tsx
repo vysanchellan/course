@@ -1,5 +1,6 @@
+import { Suspense } from "react";
+import { LoginForm } from "./form";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   return (
@@ -15,43 +16,22 @@ export default function LoginPage() {
           <p className="font-mono text-xs text-muteddark mb-6">
             Sign in to continue reading.
           </p>
-
-          {/* TODO: Connect to authentication in Phase 2 */}
-          <div className="space-y-4">
-            <div>
-              <label className="block font-mono text-xs font-medium text-ink/70 uppercase tracking-wider mb-1.5">
-                Email
-              </label>
-              <input
-                type="email"
-                className="w-full px-3.5 py-2.5 bg-transparent border border-ink/20 rounded-sm font-mono text-sm text-ink placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
-                placeholder="you@example.com"
-              />
-            </div>
-            <div>
-              <label className="block font-mono text-xs font-medium text-ink/70 uppercase tracking-wider mb-1.5">
-                Password
-              </label>
-              <input
-                type="password"
-                className="w-full px-3.5 py-2.5 bg-transparent border border-ink/20 rounded-sm font-mono text-sm text-ink placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
-                placeholder="••••••••"
-              />
-            </div>
-            {/* TODO: Replace with actual authentication */}
-            <Link href="/dashboard">
-              <Button variant="primary" size="lg" className="w-full">
-                Sign in →
-              </Button>
-            </Link>
+          <Suspense fallback={<div className="font-mono text-xs text-muteddark">Loading...</div>}>
+            <LoginForm />
+          </Suspense>
+          <div className="mt-6 space-y-2 text-center">
+            <p className="font-mono text-xs text-muteddark">
+              <Link href="/auth/forgot-password" className="text-gold hover:underline">
+                Forgot password?
+              </Link>
+            </p>
+            <p className="font-mono text-xs text-muteddark">
+              Don&rsquo;t have an account?{" "}
+              <Link href="/register" className="text-gold hover:underline">
+                Register
+              </Link>
+            </p>
           </div>
-
-          <p className="font-mono text-xs text-muteddark text-center mt-6">
-            Don&rsquo;t have an account?{" "}
-            <Link href="/register" className="text-gold hover:underline">
-              Register
-            </Link>
-          </p>
         </div>
       </div>
     </div>

@@ -1,7 +1,14 @@
+import { redirect } from "next/navigation";
 import Link from "next/link";
-import { bookmarks } from "@/lib/data";
+import { getCurrentUser } from "@/lib/actions/auth";
+import { getBookmarks } from "@/lib/actions/bookmarks";
 
-export default function BookmarksPage() {
+export default async function BookmarksPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  const bookmarks = await getBookmarks();
+
   return (
     <div className="px-6 md:px-12 py-10 max-w-3xl mx-auto">
       <div className="font-mono text-[11px] tracking-[0.25em] text-gold uppercase mb-2">
@@ -34,7 +41,7 @@ export default function BookmarksPage() {
           {bookmarks.map((bm) => (
             <Link
               key={bm.id}
-              href={`/course/${bm.lessonId}`}
+              href={`/course/${bm.lessonSlug}`}
               className="block bg-panel border border-panelborder rounded-md p-5 hover:border-gold/40 transition-colors"
             >
               <div className="flex items-center gap-2 mb-2">
@@ -55,9 +62,11 @@ export default function BookmarksPage() {
                   Ch. {bm.chapter}
                 </span>
               </div>
-              <p className="font-serif text-sm text-[#c9c6bd]/80 leading-relaxed">
-                &ldquo;{bm.excerpt}&rdquo;
-              </p>
+              {bm.excerpt && (
+                <p className="font-serif text-sm text-[#c9c6bd]/80 leading-relaxed">
+                  &ldquo;{bm.excerpt}&rdquo;
+                </p>
+              )}
               <div className="font-mono text-[10px] text-muteddark mt-2">
                 {new Date(bm.timestamp).toLocaleDateString("en-US", {
                   month: "short",
