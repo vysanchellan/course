@@ -91,9 +91,14 @@ export function Navbar({ variant = "marketing", user, accessLevel }: NavbarProps
               <>
                 <Link
                   href="/course/final-project"
-                  className="font-mono text-xs text-muteddark hover:text-parchment transition-colors"
+                  className={cn(
+                    "font-mono text-xs transition-colors",
+                    accessLevel === "admin"
+                      ? "text-gold hover:text-goldsoft"
+                      : "text-muteddark hover:text-parchment"
+                  )}
                 >
-                  Final Project
+                  Final Project{accessLevel !== "admin" && " 🔒"}
                 </Link>
                 <Link
                   href="/troubleshooting"

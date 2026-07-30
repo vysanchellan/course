@@ -11,6 +11,20 @@ interface SideTocProps {
 export function SideToc({ currentLessonSlug }: SideTocProps) {
   return (
     <aside className="hidden xl:flex flex-col w-56 border-r border-panelborder bg-panel shrink-0">
+      <div className="p-3 border-b border-panelborder">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 px-2 py-1.5 rounded-sm bg-white/[0.04] hover:bg-white/[0.08] transition-colors font-mono text-[11px] text-[#c9c6bd]"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </Link>
+      </div>
       <div className="p-4 border-b border-panelborder">
         <div className="font-mono text-[11px] text-muteddark uppercase tracking-wider">
           Course

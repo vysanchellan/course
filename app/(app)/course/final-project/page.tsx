@@ -15,7 +15,9 @@ export default async function FinalProjectPage() {
   const total = allLessons.length;
   const completed = allLessons.filter((l: any) => l.progress?.completed).length;
   const admin = await isAdmin();
-  const unlocked = completed >= total || admin;
+
+  // Only unlock if lessons exist AND all completed (or admin)
+  const unlocked = (total > 0 && completed >= total) || admin;
 
   if (!unlocked) {
     const nextLesson = allLessons.find((l: any) => !l.progress?.completed);
