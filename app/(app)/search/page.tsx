@@ -5,7 +5,8 @@ import Link from "next/link";
 import { lessons } from "@/lib/data";
 import { getLessonContent } from "@/lib/content";
 
-function stripHtml(html: string): string {
+function stripHtml(html: string | undefined): string {
+  if (!html) return "";
   return html.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 }
 

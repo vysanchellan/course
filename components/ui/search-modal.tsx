@@ -6,7 +6,8 @@ import { lessons, defaultProgress } from "@/lib/data";
 import { getLessonContent } from "@/lib/content";
 import Link from "next/link";
 
-function stripHtml(html: string): string {
+function stripHtml(html: string | undefined): string {
+  if (!html) return "";
   return html.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 }
 
