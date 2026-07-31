@@ -24,53 +24,74 @@ export function ResetPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // PKCE codes are single-use — this ref guarantees the exchange runs at
-  // most once per mount, even if the effect is double-invoked (StrictMode).
-  const exchangedRef = useRef(false);
+  // Implicit flow: recovery tokens arrive in the URL hash fragment
+  // (#access_token=...&type=recovery). No verifier is stored anywhere, so the
+  // link works even when the email is opened on a different device than the
+  // one that requested it. This ref guards against processing the tokens
+  // twice (e.g. StrictMode double-invoking the effect).
+  const processedRef = useRef(false);
+  const finishedRef = useRef(false);
+
+  function finish(established: boolean) {
+    if (finishedRef.current) return;
+    finishedRef.current = true;
+    setChecking(false);
+    if (established) {
+      window.history.replaceState({}, "", window.location.pathname);
+      setShowForm(true);
+    } else {
+      setInvalid(true);
+    }
+  }
 
   useEffect(() => {
     const supabase = createBrowserSupabaseClient();
 
+    // Canonical implicit-flow signal: supabase-js auto-detects #access_token
+    // in the URL on init and fires PASSWORD_RECOVERY when type=recovery.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === "PASSWORD_RECOVERY") {
+          finish(!!session);
+        }
+      }
+    );
+
     async function init() {
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get("code");
+      const hash = new URLSearchParams(window.location.hash.slice(1));
+      const accessToken = hash.get("access_token");
+      const refreshToken = hash.get("refresh_token");
 
-      if (code) {
-        // PKCE recovery flow: the single-use code in ?code= is the source of
-        // truth. No onAuthStateChange/PASSWORD_RECOVERY listener — that event
-        // only fires for the implicit #access_token flow and never here.
-        if (exchangedRef.current) return;
-        exchangedRef.current = true;
+      if (accessToken) {
+        if (processedRef.current) return;
+        processedRef.current = true;
 
-        const { data, error } =
-          await supabase.auth.exchangeCodeForSession(code);
+        // Establish the session explicitly from the URL tokens. Recovery
+        // links include both access_token and refresh_token.
+        const { error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken || "",
+        });
 
-        if (error || !data.session) {
-          setChecking(false);
-          setInvalid(true);
+        if (error) {
+          finish(false);
           return;
         }
 
-        // Drop the code from the URL so a refresh can't attempt a doomed
-        // second exchange against the same single-use code.
-        window.history.replaceState({}, "", window.location.pathname);
-        setChecking(false);
-        setShowForm(true);
+        const { data: { session } } = await supabase.auth.getSession();
+        finish(!!session);
         return;
       }
 
-      // No code — allow a previously-validated recovery session (e.g. the
-      // user refreshed after the exchange already ran), else treat as invalid.
+      // No tokens — valid only if a recovery session already exists
+      // (e.g. the user refreshed after the tokens were processed).
       const { data: { session } } = await supabase.auth.getSession();
-      setChecking(false);
-      if (session) {
-        setShowForm(true);
-      } else {
-        setInvalid(true);
-      }
+      finish(!!session);
     }
 
     init();
+
+    return () => subscription.unsubscribe();
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
