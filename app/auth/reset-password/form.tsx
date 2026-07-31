@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-
-const CHECK_TIMEOUT_MS = 8000;
 
 export function ResetPasswordForm() {
   const router = useRouter();
@@ -26,95 +24,53 @@ export function ResetPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  // PKCE codes are single-use — this ref guarantees the exchange runs at
+  // most once per mount, even if the effect is double-invoked (StrictMode).
+  const exchangedRef = useRef(false);
+
   useEffect(() => {
-    let active = true;
     const supabase = createBrowserSupabaseClient();
-
-    const fallback = setTimeout(() => {
-      if (active) {
-        setChecking(false);
-        setInvalid(true);
-      }
-    }, CHECK_TIMEOUT_MS);
-
-    const cleanUrl = () => {
-      window.history.replaceState({}, "", window.location.pathname);
-    };
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === "PASSWORD_RECOVERY" && session && active) {
-          clearTimeout(fallback);
-          cleanUrl();
-          setChecking(false);
-          setShowForm(true);
-        }
-      }
-    );
 
     async function init() {
       const params = new URLSearchParams(window.location.search);
       const code = params.get("code");
-      const hash = new URLSearchParams(window.location.hash.slice(1));
-      const hasHashToken = !!hash.get("access_token");
 
-      // PKCE flow: code in the query string
       if (code) {
-        const { error: exchangeError } =
+        // PKCE recovery flow: the single-use code in ?code= is the source of
+        // truth. No onAuthStateChange/PASSWORD_RECOVERY listener — that event
+        // only fires for the implicit #access_token flow and never here.
+        if (exchangedRef.current) return;
+        exchangedRef.current = true;
+
+        const { data, error } =
           await supabase.auth.exchangeCodeForSession(code);
-        const { data: { session } } = await supabase.auth.getSession();
-        if (active) {
-          clearTimeout(fallback);
-          cleanUrl();
-          setChecking(false);
-          if (exchangeError || !session) {
-            setInvalid(true);
-          } else {
-            setShowForm(true);
-          }
-        }
-        return;
-      }
 
-      // Implicit flow: tokens in the URL hash fragment.
-      // The onAuthStateChange listener above will also fire PASSWORD_RECOVERY;
-      // here we just confirm the session landed and surface an error if not.
-      if (hasHashToken) {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (active) {
-          clearTimeout(fallback);
-          cleanUrl();
+        if (error || !data.session) {
           setChecking(false);
-          if (session) {
-            setShowForm(true);
-          } else {
-            setInvalid(true);
-          }
-        }
-        return;
-      }
-
-      // Direct visit with no tokens — only valid if a recovery session
-      // already exists (e.g. user refreshed after validating).
-      const { data: { session } } = await supabase.auth.getSession();
-      if (active) {
-        clearTimeout(fallback);
-        setChecking(false);
-        if (session) {
-          setShowForm(true);
-        } else {
           setInvalid(true);
+          return;
         }
+
+        // Drop the code from the URL so a refresh can't attempt a doomed
+        // second exchange against the same single-use code.
+        window.history.replaceState({}, "", window.location.pathname);
+        setChecking(false);
+        setShowForm(true);
+        return;
+      }
+
+      // No code — allow a previously-validated recovery session (e.g. the
+      // user refreshed after the exchange already ran), else treat as invalid.
+      const { data: { session } } = await supabase.auth.getSession();
+      setChecking(false);
+      if (session) {
+        setShowForm(true);
+      } else {
+        setInvalid(true);
       }
     }
 
     init();
-
-    return () => {
-      active = false;
-      subscription.unsubscribe();
-      clearTimeout(fallback);
-    };
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
