@@ -4,6 +4,42 @@ import { revalidatePath } from "next/cache";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { lessons as staticLessons } from "@/lib/data";
 
+function toUtcDay(dateStr: string): number {
+  const d = new Date(dateStr);
+  return Math.floor(
+    Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) / 86400000
+  );
+}
+
+function calculateStreak(
+  progressData: { last_read_at: string | null }[]
+): number {
+  const days = new Set<number>();
+  for (const p of progressData) {
+    if (p.last_read_at) days.add(toUtcDay(p.last_read_at));
+  }
+  if (days.size === 0) return 0;
+
+  const today = toUtcDay(new Date().toISOString());
+  const sorted = [...days].sort((a, b) => b - a);
+  const mostRecent = sorted[0];
+
+  // Most recent activity 2+ days ago means the streak is dead
+  if (mostRecent < today - 1) return 0;
+
+  let streak = 0;
+  let expected = mostRecent;
+  for (const day of sorted) {
+    if (day === expected) {
+      streak++;
+      expected--;
+    } else if (day < expected) {
+      break;
+    }
+  }
+  return streak;
+}
+
 export async function saveProgress(data: {
   lessonId: string;
   progress: number;
@@ -131,7 +167,7 @@ export async function getDashboardProgress() {
         currentLessonChapter: currentLesson?.chapter || null,
         totalReadingTime: `${Math.round(totalReadMinutes / 60)}h ${Math.round(totalReadMinutes % 60)}min`,
         lastSessionDate: lastRead[0]?.progress?.last_read_at || null,
-        streak: 0,
+        streak: calculateStreak(progressData || []),
         lessons: lessonsWithProgress,
         recentActivity,
       };
@@ -205,5 +241,6 @@ export async function getDashboardStats() {
     percentage,
     totalEstimatedMinutes,
     remainingMinutes,
+    streak: calculateStreak(progressData || []),
   };
 }
