@@ -69,15 +69,19 @@ export async function saveProgress(data: {
     }
   }
 
+  const payload: Record<string, unknown> = {
+    user_id: user.id,
+    lesson_id: lessonId,
+    progress: Math.min(100, Math.max(0, data.progress)),
+    scroll_position: data.scrollPosition ?? 0,
+    last_read_at: new Date().toISOString(),
+  };
+  if (data.completed !== undefined) {
+    payload.completed = data.completed === true;
+  }
+
   const { error } = await supabase.from("reading_progress").upsert(
-    {
-      user_id: user.id,
-      lesson_id: lessonId,
-      progress: Math.min(100, Math.max(0, data.progress)),
-      scroll_position: data.scrollPosition ?? 0,
-      completed: data.completed === true,
-      last_read_at: new Date().toISOString(),
-    },
+    payload,
     { onConflict: "user_id, lesson_id" }
   );
 

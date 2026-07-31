@@ -18,9 +18,9 @@ interface LessonData {
   content: string;
   reading_time: string | null;
   estimated_minutes: number;
+  bookmarked: boolean;
   progress: {
     completed: boolean;
-    bookmarked?: boolean;
     progress: number;
     scroll_position: number;
   } | null;
@@ -33,7 +33,7 @@ export function ReaderPageClient({
   lesson: LessonData;
   userId: string;
 }) {
-  const [bookmarked, setBookmarked] = useState(false);
+  const [bookmarked, setBookmarked] = useState(lesson.bookmarked);
   const [completed, setCompleted] = useState(
     lesson.progress?.completed || false
   );

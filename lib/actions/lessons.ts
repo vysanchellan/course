@@ -99,7 +99,7 @@ export async function getLessonWithProgress(slug: string) {
   const resolved = lesson || fallback;
 
   if (!user) {
-    return { ...resolved, content: htmlContent, progress: null };
+    return { ...resolved, content: htmlContent, progress: null, bookmarked: false };
   }
 
   if (lesson) {
@@ -110,10 +110,18 @@ export async function getLessonWithProgress(slug: string) {
       .eq("lesson_id", lesson.id)
       .single();
 
+    const { data: bookmark } = await supabase
+      .from("bookmarks")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("lesson_id", lesson.id)
+      .maybeSingle();
+
     return {
       ...lesson,
       content: htmlContent,
       progress: progress || null,
+      bookmarked: !!bookmark,
     };
   }
 
@@ -121,6 +129,7 @@ export async function getLessonWithProgress(slug: string) {
     ...resolved,
     content: htmlContent,
     progress: null,
+    bookmarked: false,
   };
 }
 
