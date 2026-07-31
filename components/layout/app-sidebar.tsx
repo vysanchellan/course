@@ -3,16 +3,41 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { lessons, defaultProgress, courseState } from "@/lib/data";
+import { lessons, courseState } from "@/lib/data";
 import type { AccessLevel } from "@/lib/access";
+
+interface SidebarLessonProgress {
+  id: string;
+  chapter: number;
+  slug: string;
+  title: string;
+  progress: {
+    completed: boolean;
+    progress: number;
+  } | null;
+}
+
+interface SidebarProgress {
+  totalLessons: number;
+  completedLessons: number;
+  lessons: SidebarLessonProgress[];
+}
 
 interface AppSidebarProps {
   accessLevel?: AccessLevel;
+  progress?: SidebarProgress | null;
 }
 
-export function AppSidebar({ accessLevel }: AppSidebarProps) {
+export function AppSidebar({ accessLevel, progress }: AppSidebarProps) {
   const pathname = usePathname();
   const showSupport = accessLevel === "premium" || accessLevel === "admin";
+
+  const total = progress?.totalLessons ?? courseState.totalLessons;
+  const completed = progress?.completedLessons ?? courseState.completedLessons;
+  const progressMap = new Map(
+    (progress?.lessons || []).map((l) => [l.slug, l.progress])
+  );
+  const fpUnlocked = total > 0 && completed >= total;
 
   // Hide sidebar on lesson reader pages (they have their own SideToc)
   if (pathname.startsWith("/course/") && pathname !== "/course") {
@@ -42,14 +67,14 @@ export function AppSidebar({ accessLevel }: AppSidebarProps) {
               fill="none"
               stroke="#C9A24B"
               strokeWidth="3"
-              strokeDasharray={`${(courseState.completedLessons / courseState.totalLessons) * 94.2} 94.2`}
+              strokeDasharray={`${total > 0 ? (completed / total) * 94.2 : 0} 94.2`}
               strokeLinecap="round"
               transform="rotate(-90 18 18)"
             />
           </svg>
           <div>
             <div className="font-mono text-sm text-parchment">
-              {courseState.completedLessons}/{courseState.totalLessons}
+              {completed}/{total}
             </div>
             <div className="font-mono text-[11px] text-muteddark">lessons</div>
           </div>
@@ -58,7 +83,7 @@ export function AppSidebar({ accessLevel }: AppSidebarProps) {
 
       <nav className="flex-1 overflow-y-auto py-2">
         {lessons.map((lesson) => {
-          const prog = defaultProgress[lesson.id];
+          const prog = progressMap.get(lesson.id);
           const isActive = pathname === `/course/${lesson.id}`;
           return (
             <Link
@@ -105,27 +130,22 @@ export function AppSidebar({ accessLevel }: AppSidebarProps) {
           );
         })}
         <div className="border-t border-panelborder my-2 mx-4" />
-        {(() => {
-          const fpUnlocked = courseState.completedLessons >= courseState.totalLessons;
-          return (
-            <Link
-              href="/course/final-project"
-              className={cn(
-                "flex items-center gap-2 px-4 py-2.5 transition-colors border-l-2",
-                fpUnlocked
-                  ? "border-gold text-parchment hover:bg-panelborder/20"
-                  : "border-transparent text-muteddark hover:text-[#c9c6bd]"
-              )}
-            >
-              <span className="font-mono text-[11px] shrink-0 w-5 text-center">
-                {fpUnlocked ? "◆" : "🔒"}
-              </span>
-              <span className="font-mono text-xs flex-1 truncate">
-                Final Project
-              </span>
-            </Link>
-          );
-        })()}
+        <Link
+          href="/course/final-project"
+          className={cn(
+            "flex items-center gap-2 px-4 py-2.5 transition-colors border-l-2",
+            fpUnlocked
+              ? "border-gold text-parchment hover:bg-panelborder/20"
+              : "border-transparent text-muteddark hover:text-[#c9c6bd]"
+          )}
+        >
+          <span className="font-mono text-[11px] shrink-0 w-5 text-center">
+            {fpUnlocked ? "◆" : "🔒"}
+          </span>
+          <span className="font-mono text-xs flex-1 truncate">
+            Final Project
+          </span>
+        </Link>
       </nav>
     </aside>
   );
