@@ -17,10 +17,26 @@ export async function saveProgress(data: {
 
   if (!user) return { error: "Not authenticated" };
 
+  // Resolve slug to UUID if needed
+  let lessonId = data.lessonId;
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(lessonId);
+  if (!isUUID) {
+    const { data: lesson } = await supabase
+      .from("lessons")
+      .select("id")
+      .eq("slug", lessonId)
+      .maybeSingle();
+    if (lesson) {
+      lessonId = lesson.id;
+    } else {
+      return { error: "Lesson not found in database" };
+    }
+  }
+
   const { error } = await supabase.from("reading_progress").upsert(
     {
       user_id: user.id,
-      lesson_id: data.lessonId,
+      lesson_id: lessonId,
       progress: Math.min(100, Math.max(0, data.progress)),
       scroll_position: data.scrollPosition ?? 0,
       completed: data.completed === true,

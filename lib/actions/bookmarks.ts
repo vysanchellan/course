@@ -54,33 +54,6 @@ export async function getBookmarks() {
   });
 }
 
-export async function addBookmark(formData: FormData) {
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return { error: "Not authenticated" };
-
-  const lessonId = formData.get("lessonId") as string;
-  const excerpt = formData.get("excerpt") as string;
-
-  const { error } = await supabase.from("bookmarks").insert({
-    user_id: user.id,
-    lesson_id: lessonId,
-    excerpt,
-  });
-
-  if (error) {
-    if (error.code === "23505") return { error: "Already bookmarked" };
-    return { error: error.message };
-  }
-
-  revalidatePath("/course/[slug]");
-  revalidatePath("/bookmarks");
-  return { success: true };
-}
-
 export async function removeBookmark(lessonId: string) {
   const supabase = await createServerSupabaseClient();
   const {
@@ -119,7 +92,11 @@ export async function toggleBookmark(lessonId: string, excerpt?: string) {
       .select("id")
       .eq("slug", lessonId)
       .maybeSingle();
-    if (lesson) resolvedId = lesson.id;
+    if (lesson) {
+      resolvedId = lesson.id;
+    } else {
+      return { error: "Lesson not found in database" };
+    }
   }
 
   const { data: existing } = await supabase
