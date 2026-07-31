@@ -9,7 +9,7 @@ export default async function SupportPage() {
     redirect("/pricing");
   }
 
-  const supportEmail = process.env.SUPPORT_EMAIL || "support@example.com";
+  const supportEmail = process.env.SUPPORT_EMAIL || "chellanvysan@gmail.com";
 
   return (
     <div className="px-6 md:px-12 py-10 max-w-2xl mx-auto">
