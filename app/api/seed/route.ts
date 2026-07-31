@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { getLessonContent } from "@/lib/content";
 import { lessons } from "@/lib/data";
 
@@ -16,9 +17,10 @@ export async function GET() {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  const adminSupabase = createAdminSupabaseClient();
   const courseSlug = "from-zero-to-deployed";
 
-  const { data: existingCourse } = await supabase
+  const { data: existingCourse } = await adminSupabase
     .from("courses")
     .select("id")
     .eq("slug", courseSlug)
@@ -29,7 +31,7 @@ export async function GET() {
   if (existingCourse) {
     courseId = existingCourse.id;
   } else {
-    const { data: newCourse, error: courseError } = await supabase
+    const { data: newCourse, error: courseError } = await adminSupabase
       .from("courses")
       .insert({
         slug: courseSlug,
@@ -53,7 +55,7 @@ export async function GET() {
   for (const lesson of lessons) {
     const content = getLessonContent(lesson.id);
 
-    const { error } = await supabase.from("lessons").upsert(
+    const { error } = await adminSupabase.from("lessons").upsert(
       {
         course_id: courseId,
         chapter: lesson.chapter,
