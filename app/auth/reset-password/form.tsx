@@ -1,24 +1,206 @@
 "use client";
 
-import { useActionState } from "react";
-import { resetPassword } from "@/lib/actions/auth";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 
-async function resetPasswordAction(
-  _prev: { error?: string } | null,
-  formData: FormData
-) {
-  return resetPassword(formData);
-}
+const CHECK_TIMEOUT_MS = 8000;
 
 export function ResetPasswordForm() {
-  const [state, action, pending] = useActionState(resetPasswordAction, null);
+  const router = useRouter();
+  const [checking, setChecking] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [invalid, setInvalid] = useState(false);
+
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<{
+    password?: string;
+    confirm?: string;
+  }>({});
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    const supabase = createBrowserSupabaseClient();
+
+    const fallback = setTimeout(() => {
+      if (active) {
+        setChecking(false);
+        setInvalid(true);
+      }
+    }, CHECK_TIMEOUT_MS);
+
+    const cleanUrl = () => {
+      window.history.replaceState({}, "", window.location.pathname);
+    };
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === "PASSWORD_RECOVERY" && session && active) {
+          clearTimeout(fallback);
+          cleanUrl();
+          setChecking(false);
+          setShowForm(true);
+        }
+      }
+    );
+
+    async function init() {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+      const hash = new URLSearchParams(window.location.hash.slice(1));
+      const hasHashToken = !!hash.get("access_token");
+
+      // PKCE flow: code in the query string
+      if (code) {
+        const { error: exchangeError } =
+          await supabase.auth.exchangeCodeForSession(code);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (active) {
+          clearTimeout(fallback);
+          cleanUrl();
+          setChecking(false);
+          if (exchangeError || !session) {
+            setInvalid(true);
+          } else {
+            setShowForm(true);
+          }
+        }
+        return;
+      }
+
+      // Implicit flow: tokens in the URL hash fragment.
+      // The onAuthStateChange listener above will also fire PASSWORD_RECOVERY;
+      // here we just confirm the session landed and surface an error if not.
+      if (hasHashToken) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (active) {
+          clearTimeout(fallback);
+          cleanUrl();
+          setChecking(false);
+          if (session) {
+            setShowForm(true);
+          } else {
+            setInvalid(true);
+          }
+        }
+        return;
+      }
+
+      // Direct visit with no tokens — only valid if a recovery session
+      // already exists (e.g. user refreshed after validating).
+      const { data: { session } } = await supabase.auth.getSession();
+      if (active) {
+        clearTimeout(fallback);
+        setChecking(false);
+        if (session) {
+          setShowForm(true);
+        } else {
+          setInvalid(true);
+        }
+      }
+    }
+
+    init();
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+      clearTimeout(fallback);
+    };
+  }, []);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setFieldErrors({});
+
+    const errors: { password?: string; confirm?: string } = {};
+    if (password.length < 8) {
+      errors.password = "Password must be at least 8 characters.";
+    }
+    if (confirm !== password) {
+      errors.confirm = "Passwords do not match.";
+    }
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    setLoading(true);
+    const supabase = createBrowserSupabaseClient();
+    const { error: updateError } = await supabase.auth.updateUser({ password });
+    setLoading(false);
+
+    if (updateError) {
+      setError(updateError.message);
+      return;
+    }
+
+    setSuccess(true);
+    setTimeout(() => router.push("/login?reset=true"), 2000);
+  }
+
+  if (checking) {
+    return (
+      <div className="text-center py-8">
+        <div className="font-mono text-sm text-muteddark animate-pulse">
+          Validating your reset link...
+        </div>
+      </div>
+    );
+  }
+
+  if (invalid) {
+    return (
+      <div className="text-center py-4">
+        <div className="font-mono text-sm text-[#b3503a] mb-2">
+          This reset link is invalid or has expired.
+        </div>
+        <p className="font-mono text-xs text-muteddark mb-6">
+          Request a new one to continue.
+        </p>
+        <Link
+          href="/auth/forgot-password"
+          className="inline-flex w-full items-center justify-center gap-2 font-mono font-bold rounded-sm bg-gold text-ink px-6 py-3.5 text-sm hover:bg-goldsoft transition-colors"
+        >
+          Request new link →
+        </Link>
+        <a
+          href="/login"
+          className="block font-mono text-xs text-gold hover:underline mt-4"
+        >
+          Back to sign in
+        </a>
+      </div>
+    );
+  }
+
+  if (success) {
+    return (
+      <div className="text-center py-8">
+        <div className="font-mono text-sm text-diffadd mb-2">
+          ✓ Password updated
+        </div>
+        <p className="font-mono text-xs text-muteddark">
+          Redirecting to sign in...
+        </p>
+      </div>
+    );
+  }
+
+  if (!showForm) return null;
 
   return (
-    <form action={action} className="space-y-4">
-      {state?.error && (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
         <div className="font-mono text-xs text-[#b3503a] bg-[#b3503a]/10 border border-[#b3503a]/20 rounded-sm px-3 py-2">
-          {state.error}
+          {error}
         </div>
       )}
       <div>
@@ -28,18 +210,91 @@ export function ResetPasswordForm() {
         >
           New password
         </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          minLength={6}
-          className="w-full px-3.5 py-2.5 bg-transparent border border-white/10 rounded-sm font-mono text-sm text-parchment placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
-          placeholder="At least 6 characters"
-        />
+        <div className="relative">
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={8}
+            autoComplete="new-password"
+            className="w-full px-3.5 py-2.5 pr-10 bg-transparent border border-white/10 rounded-sm font-mono text-sm text-parchment placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+            placeholder="At least 8 characters"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-muteddark hover:text-parchment transition-colors"
+          >
+            {showPassword ? (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                <line x1="1" y1="1" x2="23" y2="23" />
+              </svg>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            )}
+          </button>
+        </div>
+        {fieldErrors.password && (
+          <p className="font-mono text-xs text-[#b3503a] mt-1">
+            {fieldErrors.password}
+          </p>
+        )}
       </div>
-      <Button variant="primary" size="lg" className="w-full" disabled={pending}>
-        {pending ? "Resetting..." : "Reset password →"}
+      <div>
+        <label
+          htmlFor="confirm"
+          className="block font-mono text-xs font-medium text-[#c9c6bd]/70 uppercase tracking-wider mb-1.5"
+        >
+          Confirm password
+        </label>
+        <div className="relative">
+          <input
+            id="confirm"
+            name="confirm"
+            type={showConfirm ? "text" : "password"}
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            required
+            minLength={8}
+            autoComplete="new-password"
+            className="w-full px-3.5 py-2.5 pr-10 bg-transparent border border-white/10 rounded-sm font-mono text-sm text-parchment placeholder:text-muteddark/50 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+            placeholder="Re-enter your password"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirm((v) => !v)}
+            aria-label={showConfirm ? "Hide password" : "Show password"}
+            className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-muteddark hover:text-parchment transition-colors"
+          >
+            {showConfirm ? (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                <line x1="1" y1="1" x2="23" y2="23" />
+              </svg>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            )}
+          </button>
+        </div>
+        {fieldErrors.confirm && (
+          <p className="font-mono text-xs text-[#b3503a] mt-1">
+            {fieldErrors.confirm}
+          </p>
+        )}
+      </div>
+      <Button variant="gold" size="lg" className="w-full" disabled={loading}>
+        {loading ? "Resetting..." : "Reset password →"}
       </Button>
     </form>
   );

@@ -59,8 +59,10 @@ export async function forgotPassword(formData: FormData) {
 
   const email = formData.get("email") as string;
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://course-eight-mu.vercel.app";
+
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/reset-password`,
+    redirectTo: `${siteUrl}/auth/reset-password`,
   });
 
   if (error) {
@@ -68,20 +70,6 @@ export async function forgotPassword(formData: FormData) {
   }
 
   return { success: true };
-}
-
-export async function resetPassword(formData: FormData) {
-  const supabase = await createServerSupabaseClient();
-
-  const password = formData.get("password") as string;
-
-  const { error } = await supabase.auth.updateUser({ password });
-
-  if (error) {
-    return { error: error.message };
-  }
-
-  redirect("/login?reset=true");
 }
 
 export async function getCurrentUser() {
